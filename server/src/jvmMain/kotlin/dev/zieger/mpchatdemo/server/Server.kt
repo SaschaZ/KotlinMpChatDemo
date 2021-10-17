@@ -1,3 +1,5 @@
+package dev.zieger.mpchatdemo.server
+
 import dev.zieger.mpchatdemo.common.Constants.HOST
 import dev.zieger.mpchatdemo.common.Constants.PORT
 import dev.zieger.mpchatdemo.common.dto.ChatContent
