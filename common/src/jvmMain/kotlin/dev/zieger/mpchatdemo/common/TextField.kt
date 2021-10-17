@@ -16,8 +16,6 @@ import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
 import org.jetbrains.compose.common.ui.Modifier
 
 
-@ExperimentalComposeUiApi
-@OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
 actual fun TextField(
     content: MutableState<String>,
@@ -37,13 +35,12 @@ actual fun TextField(
         maxLines = maxLines ?: Int.MAX_VALUE,
         modifier = androidx.compose.ui.Modifier.focusRequester(FocusRequester().also { req ->
             focusRequester { req.requestFocus() }
-        })
-            .onKeyEvent {
+        })/*.onKeyEvent {
                 if (it.key == Key.Enter) {
                     onSubmit()
                     true
                 } else false
 
-            }
+            }*/
     )
 }

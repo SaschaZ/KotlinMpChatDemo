@@ -46,7 +46,6 @@ fun Chat() {
                         }
                     }
                 }
-                @OptIn(ExperimentalComposeWebWidgetsApi::class)
                 TextField(username,
                     onValueChange = {
                         username.value = it.filterNot { c -> c.isWhitespace() }
@@ -69,7 +68,6 @@ fun Chat() {
                         chat.sendMessage(message.value)
                         message.value = ""
                     }
-                    @OptIn(ExperimentalComposeWebWidgetsApi::class)
                     TextField(
                         message,
                         onValueChange = {

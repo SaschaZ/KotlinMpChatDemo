@@ -6,7 +6,6 @@ import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
 import org.jetbrains.compose.common.ui.Modifier
 
 
-@OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
 expect fun TextField(
     content: MutableState<String>,

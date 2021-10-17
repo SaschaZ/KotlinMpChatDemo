@@ -7,7 +7,7 @@ import org.jetbrains.compose.common.ui.Modifier
 import org.jetbrains.compose.common.ui.unit.IntSize
 import org.jetbrains.compose.web.dom.TextInput
 
-@OptIn(ExperimentalComposeWebWidgetsApi::class)
+
 @Composable
 actual fun TextField(
     content: MutableState<String>,
