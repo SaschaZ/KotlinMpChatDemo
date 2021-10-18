@@ -1,4 +1,4 @@
-FROM openjdk:16
+FROM openjdk:15
 COPY . /usr/src/kotlinMpChatDemo
 WORKDIR /usr/src/kotlinMpChatDemo
 EXPOSE 8080

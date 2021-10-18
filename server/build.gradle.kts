@@ -49,7 +49,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("dev.zieger.mpchatdemo.ServerKt")
+    mainClass.set("dev.zieger.mpchatdemo.server.ServerKt")
 }
 
 tasks.named<Copy>("jvmProcessResources") {

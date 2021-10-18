@@ -49,7 +49,13 @@ dependencies {
     val androidComposeVersion: String by project
     implementation("androidx.compose.runtime:runtime:$androidComposeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$androidComposeVersion")
-    implementation("androidx.compose.runtime:runtime-rxjava2:$androidComposeVersion")
+
+    implementation("androidx.compose.ui:ui:1.0.4")
+    implementation("androidx.compose.foundation:foundation:1.0.4")
+    implementation("androidx.compose.material:material:1.0.4")
+    implementation("androidx.compose.material:material-icons-core:1.0.4")
+    implementation("androidx.compose.material:material-icons-extended:1.0.4")
+    implementation("androidx.activity:activity-compose:1.4.0-rc01")
 
     val androidxCoreKtxVersion: String by project
     implementation("androidx.core:core-ktx:$androidxCoreKtxVersion")
