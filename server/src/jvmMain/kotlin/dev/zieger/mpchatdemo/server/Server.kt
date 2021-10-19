@@ -96,11 +96,9 @@ fun main(args: Array<String>) {
     val port = args.indexOf("-p").takeIf { it in 0..args.lastIndex }?.let { args[it + 1].toIntOrNull() } ?: PORT
 
     embeddedServer(Netty, port = port) {
+        install(DefaultHeaders)
         install(WebSockets) {
             pingPeriod = Duration.ofSeconds(60)
-        }
-        install(Compression) {
-            gzip()
         }
         val scope = CoroutineScope(Dispatchers.IO)
         val messageChannel = Channel<ChatContent>()
