@@ -1,11 +1,9 @@
 package dev.zieger.mpchatdemo.server
 
-import dev.zieger.mpchatdemo.common.Constants.HOST
 import dev.zieger.mpchatdemo.common.Constants.PORT
 import dev.zieger.mpchatdemo.common.dto.ChatContent
 import dev.zieger.mpchatdemo.common.dto.ChatContent.Message
 import dev.zieger.mpchatdemo.common.dto.ChatContent.Notification
-import dev.zieger.mpchatdemo.server.ChatContents
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -96,9 +94,8 @@ fun main(args: Array<String>) {
     org.apache.log4j.BasicConfigurator.configure()
 
     val port = args.indexOf("-p").takeIf { it in 0..args.lastIndex }?.let { args[it + 1].toIntOrNull() } ?: PORT
-    val host = args.indexOf("-h").takeIf { it in 0..args.lastIndex }?.let { args[it + 1] } ?: HOST
 
-    embeddedServer(Netty, port = port, host = host) {
+    embeddedServer(Netty, port = port) {
         install(WebSockets) {
             pingPeriod = Duration.ofSeconds(60)
         }
