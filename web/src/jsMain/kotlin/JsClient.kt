@@ -20,7 +20,10 @@ fun main() {
 //        Text("Hello")
 //    }
 
-    val url = Url(document.URL)
+    val url = Url(
+        URLProtocol.HTTP, "localhost", 9020, "/chat/",
+        Parameters.Empty, "", null, null, false
+    )
     val chat = ChatClient(url) { append() }
     var username: String? = null
     window.onload = {
