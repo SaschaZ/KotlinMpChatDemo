@@ -20,7 +20,7 @@ fun main() {
 //        Text("Hello")
 //    }
 
-    val url = Url(document.URL).copy(specifiedPort = 9020)
+    val url = Url(document.URL)
     val chat = ChatClient(url) { append() }
     var username: String? = null
     window.onload = {

@@ -1,10 +1,13 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("multiplatform")
     application
     kotlin("plugin.serialization")
+    id("com.github.johnrengelman.shadow") version "7.1.0"
 }
 
-group = "dev.zieger.mpchat.server"
+group = "dev.zieger.mpchatdemo.server"
 version = "1.0-SNAPSHOT"
 
 val ktorVersion: String by project
@@ -65,5 +68,17 @@ tasks.named<Copy>("jvmProcessResources") {
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Copy>("jvmProcessResources"))
     dependsOn(tasks.named<Jar>("jvmJar"))
+
     classpath(tasks.named<Jar>("jvmJar"))
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        archiveFileName.set("MpChatServerDemo.jar")
+        mergeServiceFiles()
+        manifest {
+            attributes(mapOf("Main-Class" to "dev.zieger.mpchatdemo.server.ServerKt"))
+        }
+        destinationDirectory.set(File(rootProject.projectDir.path))
+    }
 }
