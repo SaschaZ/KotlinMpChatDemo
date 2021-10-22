@@ -28,11 +28,11 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 
-fun HTML.username() {
+fun HTML.username(path: String) {
     head {
         title("KotlinMpChatDemo")
-        link(rel = "stylesheet", href = "/styles.css", type = "text/css")
-        script(src = "/static/web.js") {}
+        link(rel = "stylesheet", href = "${path}styles.css", type = "text/css")
+        script(src = "${path}static/web.js") {}
     }
     body {
         h1 {
@@ -98,91 +98,114 @@ fun main(args: Array<String>) {
     val path = args.indexOf("--path").takeIf { it in 0 until args.lastIndex }?.let { args[it + 1] }
         ?.let { if (it.endsWith("/")) it else "$it/" } ?: "/"
 
-    embeddedServer(Netty, port = port) {
-        install(DefaultHeaders)
-        install(WebSockets) {
-            pingPeriod = Duration.ofSeconds(60)
-        }
-        val scope = CoroutineScope(Dispatchers.IO)
-        val messageChannel = Channel<ChatContent>()
-        val messages = flow { emitAll(messageChannel) }.shareIn(scope, SharingStarted.Eagerly, 1024)
-        val json = Json { classDiscriminator = "#class" }
-
-        scope.launch { ChatContents.all().forEach { messageChannel.send(it) } }
-
-        suspend fun sendContent(content: ChatContent) {
-            ChatContents.add(content)
-            messageChannel.send(content)
-        }
-
-        routing {
-            webSocket(path) {
-                call.parameters["username"]?.also { user ->
-                    println("new user: $user")
-
-                    val sendJob = scope.launch {
-                        messages.collect {
-                            println("new message for $user: $it")
-                            send(json.encodeToString(ChatContent.serializer(), it))
-                        }
-                    }
-
-                    sendContent(
-                        Notification(
-                            System.currentTimeMillis(), System.currentTimeMillis().format(),
-                            "\"$user\" joined the chat"
-                        )
-                    )
-
-                    for (frame in incoming) when (frame) {
-                        is Frame.Text -> frame.readText().ifBlank { null }?.also { msg ->
-                            sendContent(
-                                Message(
-                                    user,
-                                    System.currentTimeMillis(),
-                                    System.currentTimeMillis().format(),
-                                    msg
-                                )
-                            )
-                        }
-                        is Frame.Ping,
-                        is Frame.Pong -> Unit
-                        is Frame.Close ->
-                            sendContent(
-                                Notification(
-                                    System.currentTimeMillis(), System.currentTimeMillis().format(),
-                                    "\"$user\" left chat"
-                                )
-                            )
-                        else -> throw IllegalArgumentException(
-                            "Unknown Frame type " +
-                                    "${frame::class}"
-                        )
-                    }
-                    sendJob.cancelAndJoin()
-                } ?: run<Unit> {
-                    send(
-                        Frame.Close(
-                            CloseReason(
-                                CloseReason.Codes.CANNOT_ACCEPT.code,
-                                "No username provided!"
-                            )
-                        )
+    val env = applicationEngineEnvironment {
+//        log = YOUR_LOGGER
+        module {
+            install(CallLogging) {
+                level = org.slf4j.event.Level.INFO
+            }
+            install(StatusPages) {
+                exception<Throwable> { ex ->
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        "${ex.javaClass.simpleName} - ${ex.message ?: "Empty Message"}"
                     )
                 }
             }
+            install(DefaultHeaders)
+            install(WebSockets) {
+                pingPeriod = Duration.ofSeconds(60)
+            }
 
-            get(path) {
-                call.respondHtml(HttpStatusCode.OK, HTML::username)
+            val scope = CoroutineScope(Dispatchers.IO)
+            val messageChannel = Channel<ChatContent>()
+            val messages =
+                flow { emitAll(messageChannel) }.shareIn(scope, SharingStarted.Eagerly, 1024)
+            val json = Json { classDiscriminator = "#class" }
+
+            scope.launch { ChatContents.all().forEach { messageChannel.send(it) } }
+
+            suspend fun sendContent(content: ChatContent) {
+                ChatContents.add(content)
+                messageChannel.send(content)
             }
-            get("${path}styles.css") {
-                call.respondCss { style() }
-            }
-            static("${path}static") {
-                resources()
+
+            routing {
+                webSocket(path) {
+                    call.parameters["username"]?.also { user ->
+                        println("new user: $user")
+
+                        val sendJob = scope.launch {
+                            messages.collect {
+                                println("new message for $user: $it")
+                                send(json.encodeToString(ChatContent.serializer(), it))
+                            }
+                        }
+
+                        sendContent(
+                            Notification(
+                                System.currentTimeMillis(), System.currentTimeMillis().format(),
+                                "\"$user\" joined the chat"
+                            )
+                        )
+
+                        for (frame in incoming) when (frame) {
+                            is Frame.Text -> frame.readText().ifBlank { null }?.also { msg ->
+                                sendContent(
+                                    Message(
+                                        user,
+                                        System.currentTimeMillis(),
+                                        System.currentTimeMillis().format(),
+                                        msg
+                                    )
+                                )
+                            }
+                            is Frame.Ping,
+                            is Frame.Pong -> Unit
+                            is Frame.Close ->
+                                sendContent(
+                                    Notification(
+                                        System.currentTimeMillis(),
+                                        System.currentTimeMillis().format(),
+                                        "\"$user\" left chat"
+                                    )
+                                )
+                            else -> throw IllegalArgumentException(
+                                "Unknown Frame type " +
+                                        "${frame::class}"
+                            )
+                        }
+                        sendJob.cancelAndJoin()
+                    } ?: run<Unit> {
+                        send(
+                            Frame.Close(
+                                CloseReason(
+                                    CloseReason.Codes.CANNOT_ACCEPT.code,
+                                    "No username provided!"
+                                )
+                            )
+                        )
+                    }
+                }
+
+                get(path) {
+                    call.respondHtml(HttpStatusCode.OK) { username(path) }
+                }
+                get("${path}styles.css") {
+                    call.respondCss { style() }
+                }
+                static("${path}static") {
+                    resources()
+                }
             }
         }
-    }.start(wait = true)
+
+        connector {
+            host = "127.0.0.1"//"0.0.0.0"
+            this.port = port
+        }
+    }
+    embeddedServer(Netty, env).start(wait = true)
 }
 
 fun Long.format(): String =
