@@ -4,6 +4,7 @@ import dev.zieger.mpchatdemo.common.dto.ChatContent
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class ChatClient(
-    private val host: String = Constants.HOST,
-    private val port: Int = Constants.PORT,
+    private val url: Url,
     private val onNewContent: ChatContent.() -> Unit
 ) {
 
@@ -29,9 +29,9 @@ class ChatClient(
 
     private fun CoroutineScope.startWebSocket(username: String) = launch {
         val json = Json { classDiscriminator = "#class" }
-        client.ws("/", request = {
-            host = this@ChatClient.host
-            port = this@ChatClient.port
+        client.ws(url.encodedPath, request = {
+            host = this@ChatClient.url.host
+            port = this@ChatClient.url.port
             parameter("username", username)
         }) {
             launch { for (msg in sendChannel) send(msg) }

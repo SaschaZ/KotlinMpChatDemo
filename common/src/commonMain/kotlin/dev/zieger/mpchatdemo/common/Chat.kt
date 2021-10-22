@@ -2,8 +2,6 @@ package dev.zieger.mpchatdemo.common
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import dev.zieger.mpchatdemo.common.Constants.HOST
-import dev.zieger.mpchatdemo.common.Constants.PORT
 import dev.zieger.mpchatdemo.common.dto.ChatContent
 import io.ktor.http.*
 import kotlinx.coroutines.DisposableHandle
@@ -23,12 +21,17 @@ import org.jetbrains.compose.common.ui.unit.sp
 @InternalCoroutinesApi
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
-fun Chat(host: String = HOST, port: Int = PORT) {
+fun Chat(url: String, port: Int) = Chat(Url("$url:$port"))
+
+@InternalCoroutinesApi
+@OptIn(ExperimentalComposeWebWidgetsApi::class)
+@Composable
+fun Chat(url: Url) {
     val fontSize: TextUnit = 25.sp
     val model = remember { ChatModel() }
     val scope = rememberCoroutineScope()
     val chat = remember {
-        ChatClient(host, port) {
+        ChatClient(url) {
             println("new Message received $key")
             scope.launch { model.messages.add(0, this@ChatClient) }
         }

@@ -1,14 +1,12 @@
-import dev.zieger.mpchatdemo.common.Chat
 import dev.zieger.mpchatdemo.common.ChatClient
 import dev.zieger.mpchatdemo.common.dto.ChatContent
 import dev.zieger.mpchatdemo.common.dto.ChatContent.*
+import io.ktor.http.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.*
 import kotlinx.html.dom.append
-import org.jetbrains.compose.common.material.Text
 import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
-import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -22,7 +20,8 @@ fun main() {
 //        Text("Hello")
 //    }
 
-    val chat = ChatClient { append() }
+    val url = Url(document.URL)
+    val chat = ChatClient(url) { append() }
     var username: String? = null
     window.onload = {
         document.getElementById("usernameForm")?.let { form ->
