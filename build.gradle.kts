@@ -23,7 +23,8 @@ allprojects {
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
 
             // Enable experimental coroutines APIs
-            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            freeCompilerArgs =
+                freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.Experimental"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=ExperimentalComposeWebWidgetsApi"
         }

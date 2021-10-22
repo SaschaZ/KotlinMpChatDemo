@@ -93,7 +93,10 @@ fun CSSBuilder.style() {
 fun main(args: Array<String>) {
     org.apache.log4j.BasicConfigurator.configure()
 
-    val port = args.indexOf("-p").takeIf { it in 0..args.lastIndex }?.let { args[it + 1].toIntOrNull() } ?: PORT
+    val port = args.indexOf("-p").takeIf { it in 0 until args.lastIndex }
+        ?.let { args[it + 1].toIntOrNull() } ?: PORT
+    val path = args.indexOf("--path").takeIf { it in 0 until args.lastIndex }?.let { args[it + 1] }
+        ?.let { if (it.endsWith("/")) it else "$it/" } ?: "/"
 
     embeddedServer(Netty, port = port) {
         install(DefaultHeaders)
@@ -113,7 +116,7 @@ fun main(args: Array<String>) {
         }
 
         routing {
-            webSocket("/") {
+            webSocket(path) {
                 call.parameters["username"]?.also { user ->
                     println("new user: $user")
 
@@ -169,13 +172,13 @@ fun main(args: Array<String>) {
                 }
             }
 
-            get("/") {
+            get(path) {
                 call.respondHtml(HttpStatusCode.OK, HTML::username)
             }
-            get("/styles.css") {
+            get("${path}styles.css") {
                 call.respondCss { style() }
             }
-            static("/static") {
+            static("${path}static") {
                 resources()
             }
         }
