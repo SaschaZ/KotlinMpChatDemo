@@ -1,0 +1,74 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+component common {
+
+    package jvmMain {
+        object "TextField" as JvmTextField {
+            content: MutableState<String>,
+            onValueChange: (String) -> Unit,
+            label: @Composable () -> Unit = {},
+            singleLine: Boolean = false,
+            maxLines: Int? = if (singleLine) 1 else null,
+            focusRequester: (() -> Unit) -> Unit = {},
+            onSubmit: () -> Unit = {}
+        }
+    }
+    package jsMain {
+        object "TextField" as JsTextField {
+            content: MutableState<String>,
+            onValueChange: (String) -> Unit,
+            label: @Composable () -> Unit = {},
+            singleLine: Boolean = false,
+            maxLines: Int? = if (singleLine) 1 else null,
+            focusRequester: (() -> Unit) -> Unit = {},
+            onSubmit: () -> Unit = {}
+        }
+    }
+
+    package commonMain {
+
+        class Chat {
+
+        }
+
+        class ChatClient {
+
+        }
+
+        object "TextField" as CommonTextField {
+            content: MutableState<String>,
+            onValueChange: (String) -> Unit,
+            label: @Composable () -> Unit = {},
+            singleLine: Boolean = false,
+            maxLines: Int? = if (singleLine) 1 else null,
+            focusRequester: (() -> Unit) -> Unit = {},
+            onSubmit: () -> Unit = {}
+        }
+    }
+
+    CommonTextField #-- JvmTextField
+    CommonTextField #-- JsTextField
+}
+
+component desktop {
+    class Main
+    Main --> Chat
+}
+
+component server {
+    class Server
+    class Db
+}
+
+component web {
+    class JsClient
+    JsClient --> Chat
+}
+
+component android {
+    class MainActivity
+    MainActivity --> Chat
+}
+
+@enduml

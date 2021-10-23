@@ -11,6 +11,8 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
     @OptIn(ExperimentalComposeWebWidgetsApi::class)
     val color: Color
         get() = Color(red, green, blue)
+
+    val argb: String = "0x${red.hex}${green.hex}${blue.hex}"
 }
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
@@ -37,11 +39,14 @@ private val Int.hexChar: String
         }
     }
 
-@OptIn(ExperimentalComposeWebWidgetsApi::class)
-fun String.toColor(): Color {
+fun String.toColor(): dev.zieger.mpchatdemo.common.dto.Color {
     var idx = 0
     val (red, green, blue) = removePrefix("0x").groupBy { idx++ / 2 }.map { it.value }
-    return Color(red.fromHexChar(), green.fromHexChar(), blue.fromHexChar())
+    return dev.zieger.mpchatdemo.common.dto.Color(
+        red.fromHexChar(),
+        green.fromHexChar(),
+        blue.fromHexChar()
+    )
 }
 
 private fun List<Char>.fromHexChar(): Int {

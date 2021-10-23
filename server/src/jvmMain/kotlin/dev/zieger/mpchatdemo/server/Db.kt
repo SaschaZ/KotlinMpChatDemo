@@ -3,6 +3,7 @@ package dev.zieger.mpchatdemo.server
 import dev.zieger.mpchatdemo.common.dto.ChatContent
 import dev.zieger.mpchatdemo.common.dto.ChatContentType
 import dev.zieger.mpchatdemo.common.dto.ChatUser
+import dev.zieger.mpchatdemo.common.dto.toColor
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -47,18 +48,22 @@ object Users : LongIdTable() {
             insert {
                 it[name] = userName
                 it[color] = colorArgb
-            }.let { ChatUser(it[Users.id].value, it[name], it[color]) }
+            }.let { ChatUser(it[Users.id].value, it[name], it[color].toColor()) }
         }
     }
 
     fun getOrInsert(userName: String): ChatUser = transaction {
         val existing = Users.select { name eq userName }.toList().firstOrNull()
-            ?.let { ChatUser(it[Users.id].value, it[name], it[color]) }
+            ?.let {
+                ChatUser(it[Users.id].value, it[name], it[color].toColor())
+                    .also { u -> println("get user from DB: $u") }
+            }
         existing ?: add(userName, "0xFF0000")
+            .also { u -> println("insert new user into DB: $u") }
     }
 
     fun all(): List<ChatUser> = UserEntry.all().toList().map { entry ->
-        ChatUser(entry.id.value, entry.name, entry.colorArgb)
+        ChatUser(entry.id.value, entry.name, entry.colorArgb.toColor())
     }
 }
 
@@ -92,11 +97,11 @@ object ChatContents : LongIdTable() {
         ChatContentEntry.all().toList().map { entry ->
             when (ChatContentType.valueOf(entry.type)) {
                 ChatContentType.NOTIFICATION -> ChatContent.Notification(
-                    ChatUser(entry.user.id.value, entry.user.name, entry.user.colorArgb),
+                    ChatUser(entry.user.id.value, entry.user.name, entry.user.colorArgb.toColor()),
                     entry.key, entry.timestampFormatted, entry.content
                 )
                 ChatContentType.MESSAGE -> ChatContent.Message(
-                    ChatUser(entry.user.id.value, entry.user.name, entry.user.colorArgb),
+                    ChatUser(entry.user.id.value, entry.user.name, entry.user.colorArgb.toColor()),
                     entry.key, entry.timestampFormatted, entry.content
                 )
             }

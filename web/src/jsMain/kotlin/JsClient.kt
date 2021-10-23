@@ -7,7 +7,7 @@ import org.jetbrains.compose.web.renderComposable
 @InternalCoroutinesApi
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 fun main() {
-    val port = 9020
+    val port = 9021
     val path = "/"
     val url = Url(
         URLProtocol.HTTP, "localhost", port, path,

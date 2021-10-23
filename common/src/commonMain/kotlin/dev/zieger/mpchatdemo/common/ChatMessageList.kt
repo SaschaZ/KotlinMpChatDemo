@@ -25,7 +25,7 @@ fun ChatMessageList(
             Box(modifier = Modifier.offset(y = yScroll.value.dp, x = 0.dp)) {
                 Row {
                     Text("[${msg.timestampFormatted}] ", size = fontSize)
-                    Text("\"${msg.user.name}\" ", size = fontSize, color = msg.user.color)
+                    Text("\"${msg.user.name}\" ", size = fontSize, color = msg.user.color.color)
                     Text(msg.content, size = fontSize)
                 }
             }

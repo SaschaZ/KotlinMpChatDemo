@@ -31,31 +31,9 @@ import java.util.*
 fun HTML.username(path: String) {
     head {
         title("KotlinMpChatDemo")
-//        link(rel = "stylesheet", href = "${path}styles.css", type = "text/css")
-
     }
     body {
-//        h1 {
-//            +"KotlinMpChatDemo"
-//        }
-
-        div {
-            id = "root"
-
-//            form {
-//                id = "usernameForm"
-//
-//                +"Username: "
-//                textInput {
-//                    id = "username"
-//                    autoComplete = false
-//                }
-//
-//                submitInput {
-//                    hidden = true
-//                }
-//            }
-        }
+        div { id = "root" }
         script(src = "${path}static/web.js") {}
     }
 }
@@ -103,7 +81,7 @@ fun main(args: Array<String>) {
 //        log = YOUR_LOGGER
         module {
             install(CallLogging) {
-                level = org.slf4j.event.Level.INFO
+                level = org.slf4j.event.Level.DEBUG
             }
             install(StatusPages) {
                 exception<Throwable> { ex ->
@@ -140,6 +118,7 @@ fun main(args: Array<String>) {
             routing {
                 webSocket(path.fixSlash()) {
                     call.parameters["username"]?.also { u ->
+                        println("new user $u connected")
                         val user = Users.getOrInsert(u)
 
                         val sendJob = scope.launch {
