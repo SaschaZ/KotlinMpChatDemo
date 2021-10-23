@@ -14,7 +14,7 @@ import org.w3c.dom.HTMLInputElement
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 fun main(args: Array<String>) {
     val port = 9020
-    val path = "/chat"
+    val path = "/"
 
 //    println("after main")
 //    renderComposable(rootElementId = "root") {
