@@ -10,12 +10,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.input.ImeAction
-import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
-import org.jetbrains.compose.common.ui.Modifier
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun TextField(
     content: MutableState<String>,
@@ -35,12 +33,12 @@ actual fun TextField(
         maxLines = maxLines ?: Int.MAX_VALUE,
         modifier = androidx.compose.ui.Modifier.focusRequester(FocusRequester().also { req ->
             focusRequester { req.requestFocus() }
-        })/*.onKeyEvent {
-                if (it.key == Key.Enter) {
-                    onSubmit()
-                    true
-                } else false
+        }).onKeyEvent {
+            if (it.key == Key.Enter) {
+                onSubmit()
+                true
+            } else false
 
-            }*/
+        }
     )
 }

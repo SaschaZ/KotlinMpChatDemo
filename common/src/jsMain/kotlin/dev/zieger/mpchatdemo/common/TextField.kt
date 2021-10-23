@@ -2,9 +2,6 @@ package dev.zieger.mpchatdemo.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
-import org.jetbrains.compose.common.ui.Modifier
-import org.jetbrains.compose.common.ui.unit.IntSize
 import org.jetbrains.compose.web.dom.TextInput
 
 
@@ -18,9 +15,8 @@ actual fun TextField(
     focusRequester: (() -> Unit) -> Unit,
     onSubmit: () -> Unit
 ) {
-    TextInput(content.value ?: "") {
-        onChange {
-            onValueChange(it.value)
-        }
+    TextInput(content.value) {
+        onInput { onValueChange(it.value) }
+        onKeyDown { if (it.key == "Enter") onSubmit() }
     }
 }

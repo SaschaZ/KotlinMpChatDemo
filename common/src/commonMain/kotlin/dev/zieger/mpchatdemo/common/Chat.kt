@@ -7,7 +7,6 @@ import io.ktor.http.*
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.common.core.graphics.Color
 import org.jetbrains.compose.common.foundation.layout.*
 import org.jetbrains.compose.common.material.Button
 import org.jetbrains.compose.common.material.Text
@@ -32,7 +31,6 @@ fun Chat(url: Url) {
     val scope = rememberCoroutineScope()
     val chat = remember {
         ChatClient(url) {
-            println("new Message received $key")
             scope.launch { model.messages.add(0, this@ChatClient) }
         }
     }
@@ -80,27 +78,15 @@ fun Chat(url: Url) {
                             if (it.last() == '\n') send()
                             else message.value = it
                         },
-                        onSubmit = { send() }
+                        onSubmit = { send() },
+                        label = {},
+                        focusRequester = {}
                     )
                     Button(onClick = { send() }) {
                         Text("Send")
                     }
                 }
-                LazyColumn2 {
-                    model.messages.forEach { msg ->
-                        item(msg.key) {
-                            Row {
-                                Text("[${msg.timestampFormatted}] ", size = fontSize)
-                                (msg as? ChatContent.Message)?.also {
-                                    Text("${it.user}: ", size = fontSize, color = Color.Red)
-                                    Text(msg.content, size = fontSize)
-                                } ?: run {
-                                    Text(msg.content, size = fontSize)
-                                }
-                            }
-                        }
-                    }
-                }
+                ChatMessageList(model.messages, fontSize)
             }
         }
     }

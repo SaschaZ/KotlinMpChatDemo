@@ -31,31 +31,32 @@ import java.util.*
 fun HTML.username(path: String) {
     head {
         title("KotlinMpChatDemo")
-        link(rel = "stylesheet", href = "${path}styles.css", type = "text/css")
-        script(src = "${path}static/web.js") {}
+//        link(rel = "stylesheet", href = "${path}styles.css", type = "text/css")
+
     }
     body {
-        h1 {
-            +"KotlinMpChatDemo"
-        }
+//        h1 {
+//            +"KotlinMpChatDemo"
+//        }
 
         div {
             id = "root"
 
-            form {
-                id = "usernameForm"
-
-                +"Username: "
-                textInput {
-                    id = "username"
-                    autoComplete = false
-                }
-
-                submitInput {
-                    hidden = true
-                }
-            }
+//            form {
+//                id = "usernameForm"
+//
+//                +"Username: "
+//                textInput {
+//                    id = "username"
+//                    autoComplete = false
+//                }
+//
+//                submitInput {
+//                    hidden = true
+//                }
+//            }
         }
+        script(src = "${path}static/web.js") {}
     }
 }
 
@@ -138,47 +139,39 @@ fun main(args: Array<String>) {
 
             routing {
                 webSocket(path.fixSlash()) {
-                    call.parameters["username"]?.also { user ->
-                        println("new user: $user")
+                    call.parameters["username"]?.also { u ->
+                        val user = Users.getOrInsert(u)
 
                         val sendJob = scope.launch {
                             messages.collect {
-                                println("new message for $user: $it")
                                 send(json.encodeToString(ChatContent.serializer(), it))
                             }
                         }
 
+                        val key = System.currentTimeMillis()
                         sendContent(
                             Notification(
-                                System.currentTimeMillis(), System.currentTimeMillis().format(),
-                                "\"$user\" joined the chat"
+                                user,
+                                key, key.format(),
+                                "joined the chat"
                             )
                         )
 
                         for (frame in incoming) when (frame) {
                             is Frame.Text -> frame.readText().ifBlank { null }?.also { msg ->
-                                sendContent(
-                                    Message(
-                                        user,
-                                        System.currentTimeMillis(),
-                                        System.currentTimeMillis().format(),
-                                        msg
-                                    )
-                                )
+                                sendContent(Message(user, key, key.format(), msg))
                             }
                             is Frame.Ping,
                             is Frame.Pong -> Unit
                             is Frame.Close ->
                                 sendContent(
                                     Notification(
-                                        System.currentTimeMillis(),
-                                        System.currentTimeMillis().format(),
-                                        "\"$user\" left chat"
+                                        user, key, key.format(),
+                                        "left chat"
                                     )
                                 )
                             else -> throw IllegalArgumentException(
-                                "Unknown Frame type " +
-                                        "${frame::class}"
+                                "Unknown Frame type " + "${frame::class}"
                             )
                         }
                         sendJob.cancelAndJoin()
