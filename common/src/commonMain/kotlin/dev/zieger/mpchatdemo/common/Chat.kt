@@ -13,7 +13,6 @@ import org.jetbrains.compose.common.material.Text
 import org.jetbrains.compose.common.ui.Alignment
 import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
 import org.jetbrains.compose.common.ui.Modifier
-import org.jetbrains.compose.common.ui.layout.onSizeChanged
 import org.jetbrains.compose.common.ui.unit.TextUnit
 import org.jetbrains.compose.common.ui.unit.sp
 
@@ -35,9 +34,8 @@ fun Chat(url: Url) {
         }
     }
 
-    val width = remember { mutableStateOf(0) }
     val requestFocus = remember { mutableStateOf({}) }
-    Column(modifier = Modifier.fillMaxWidth().onSizeChanged { width.value = it.width }) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         when {
             model.userName.value == null -> Row {
                 val username = remember { mutableStateOf("") }
@@ -66,7 +64,10 @@ fun Chat(url: Url) {
             }
             model.isConnecting.value -> Text("connecting …")
             else -> {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     val message = remember { mutableStateOf("") }
                     fun send() {
                         chat.sendMessage(message.value)

@@ -4,9 +4,15 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.common.core.graphics.Color
 import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
 import kotlin.math.pow
+import kotlin.random.Random
 
 @Serializable
 data class Color(val red: Int, val green: Int, val blue: Int) {
+    constructor() : this(
+        Random.nextInt(0, 255),
+        Random.nextInt(0, 255),
+        Random.nextInt(0, 255)
+    )
 
     @OptIn(ExperimentalComposeWebWidgetsApi::class)
     val color: Color

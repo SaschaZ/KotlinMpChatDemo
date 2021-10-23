@@ -31,6 +31,7 @@ import java.util.*
 fun HTML.username() {
     head {
         title("KotlinMpChatDemo")
+        link(rel = "stylesheet", href = "/styles.css", type = "text/css")
     }
     body {
         div { id = "root" }
@@ -40,32 +41,12 @@ fun HTML.username() {
 
 fun CSSBuilder.style() {
     body {
-        backgroundColor = Color.darkGreen
+        backgroundColor = Color.lightGray
         margin(5.px)
-    }
-    rule("h1") {
-        color = Color.yellow
     }
     rule("root") {
         width = 100.vw - 10.px
         display = Display.flex
-    }
-    rule("form") {
-        color = Color.yellow
-        flexGrow = 1.0
-        display = Display.flex
-    }
-    rule("input") {
-        backgroundColor = Color.black
-        color = Color.white
-        flexGrow = 1.0
-    }
-    rule("textarea") {
-        backgroundColor = Color.black
-        resize = Resize.none
-        color = Color.white
-        width = 100.vw - 17.px
-        height = 68.vh
     }
 }
 

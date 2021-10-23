@@ -1,9 +1,6 @@
 package dev.zieger.mpchatdemo.server
 
-import dev.zieger.mpchatdemo.common.dto.ChatContent
-import dev.zieger.mpchatdemo.common.dto.ChatContentType
-import dev.zieger.mpchatdemo.common.dto.ChatUser
-import dev.zieger.mpchatdemo.common.dto.toColor
+import dev.zieger.mpchatdemo.common.dto.*
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -58,7 +55,7 @@ object Users : LongIdTable() {
                 ChatUser(it[Users.id].value, it[name], it[color].toColor())
                     .also { u -> println("get user from DB: $u") }
             }
-        existing ?: add(userName, "0xFF0000")
+        existing ?: add(userName, Color().argb)
             .also { u -> println("insert new user into DB: $u") }
     }
 
