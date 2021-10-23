@@ -21,7 +21,7 @@ fun main() {
 //    }
 
     val url = Url(
-        URLProtocol.HTTP, "localhost", 9020, "/chat/",
+        URLProtocol.HTTP, "localhost", 9020, "/",
         Parameters.Empty, "", null, null, false
     )
     val chat = ChatClient(url) { append() }
