@@ -28,11 +28,11 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 
-fun HTML.username() {
+fun HTML.username(path: String) {
     head {
         title("KotlinMpChatDemo")
-        link(rel = "stylesheet", href = "/styles.css", type = "text/css")
-        script(src = "$/static/web.js") {}
+        link(rel = "stylesheet", href = "${path}styles.css", type = "text/css")
+        script(src = "$${path}static/web.js") {}
     }
     body {
         h1 {
@@ -130,8 +130,14 @@ fun main(args: Array<String>) {
                 messageChannel.send(content)
             }
 
+            fun String.fixSlash(): String = when {
+                this == "/" -> this
+                endsWith("/") -> removeSuffix("/")
+                else -> this
+            }
+
             routing {
-                webSocket("/") {
+                webSocket(path.fixSlash()) {
                     call.parameters["username"]?.also { user ->
                         println("new user: $user")
 
@@ -188,13 +194,13 @@ fun main(args: Array<String>) {
                     }
                 }
 
-                get(path) {
-                    call.respondHtml(HttpStatusCode.OK) { username() }
+                get(path.fixSlash()) {
+                    call.respondHtml(HttpStatusCode.OK) { username(path) }
                 }
-                get("/styles.css") {
+                get("${path}styles.css") {
                     call.respondCss { style() }
                 }
-                static("/static") {
+                static("${path}static") {
                     resources()
                 }
             }
