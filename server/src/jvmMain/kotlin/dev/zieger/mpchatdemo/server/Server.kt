@@ -179,7 +179,7 @@ fun main(args: Array<String>) {
         }
 
         connector {
-            host = "127.0.0.1"//"0.0.0.0"
+            host = "0.0.0.0"
             this.port = port
         }
     }
