@@ -8,15 +8,15 @@ import org.jetbrains.compose.web.renderComposable
 @InternalCoroutinesApi
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 fun main() {
-    val docUrl = Url(document.URL)
-    val port = 9020
-    val path = "/"
-    val url = Url(
-        URLProtocol.HTTP, docUrl.host, port, docUrl.encodedPath,
-        Parameters.Empty, "", null, null, false
-    )
+//    val docUrl = Url(document.URL)
+//    val port = 9020
+//    val path = "/"
+//    val url = Url(
+//        URLProtocol.HTTP, docUrl.host, port, docUrl.encodedPath,
+//        Parameters.Empty, "", null, null, false
+//    )
 
     renderComposable(rootElementId = "root") {
-        Chat(url)
+        Chat(Url(document.URL))
     }
 }
