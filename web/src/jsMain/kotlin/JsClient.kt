@@ -12,7 +12,10 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
-fun main() {
+fun main(args: Array<String>) {
+    val port = 9020
+    val path = "/chat"
+
 //    println("after main")
 //    renderComposable(rootElementId = "root") {
 ////        Chat()
@@ -21,7 +24,7 @@ fun main() {
 //    }
 
     val url = Url(
-        URLProtocol.HTTP, "localhost", 9020, "/chat",
+        URLProtocol.HTTP, "localhost", port, path,
         Parameters.Empty, "", null, null, false
     )
     val chat = ChatClient(url) { append() }

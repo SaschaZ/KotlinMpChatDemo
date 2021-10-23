@@ -32,7 +32,7 @@ fun HTML.username(path: String) {
     head {
         title("KotlinMpChatDemo")
         link(rel = "stylesheet", href = "${path}styles.css", type = "text/css")
-        script(src = "$${path}static/web.js") {}
+        script(src = "${path}static/web.js") {}
     }
     body {
         h1 {
