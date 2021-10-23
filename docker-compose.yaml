@@ -1,6 +1,34 @@
 version: "3.3"
+
 services:
-  web:
-    build: .
-    ports:
-      - "8080:8080"
+  chatdemo:
+    build:
+      context: .
+      args:
+        PORT: "9020"
+        PATH: "/chat"
+    container_name: "chatdemo"
+    restart: unless-stopped
+    networks:
+      - default
+    expose:
+      - 9020
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=default"
+      - "traefik.port=9020"
+      - "traefik.http.routers.chatdemo.rule=(Host(`zieger.dev`) && PathPrefix(`/chat`))"
+      - "traefik.http.routers.chatdemo.entrypoints=websecure"
+      - "traefik.http.routers.chatdemo.tls.certresolver=myresolver"
+      # - "traefik.http.routers.chatdemo.service=chatdemo-kotlinmpchatdemo"
+      - "traefik.http.routers.chatdemo.middlewares=compression, ratelimit"
+      # - "traefik.http.routers.chatdemo.middlewares=ws-header"
+      # - "traefik.http.middlewares.ws-header.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # - "traefik.webservice.frontend.entryPoints=http,https"
+      # - "traefik.http.middlewares.ws-replaceprefix.replacepath.path=/"
+
+
+networks:
+  default:
+    external:
+      name: web

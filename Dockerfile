@@ -1,6 +1,13 @@
-FROM openjdk:15
+FROM openjdk:15-slim-buster
+
+ARG PORT
+ARG PATH
+
 COPY . /usr/src/kotlinMpChatDemo
 WORKDIR /usr/src/kotlinMpChatDemo
-EXPOSE 8080
-RUN ./gradlew server:assemble
-CMD ["./gradlew", "server:run"]
+
+RUN echo "./gradlew server:run --args='-p ${PORT} --path ${PATH}'" > run.sh && \
+    chmod +x run.sh
+
+CMD ["/bin/bash", "-c", "./run.sh"]
+
