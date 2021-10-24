@@ -150,10 +150,10 @@ fun main(args: Array<String>) {
                 get(path.fixSlash()) {
                     call.respondHtml(HttpStatusCode.OK) { username(path) }
                 }
-                get("$path/styles.css") {
+                get("${path}styles.css") {
                     call.respondCss { style() }
                 }
-                static("$path/static") {
+                static("${path}static") {
                     resources()
                 }
             }
