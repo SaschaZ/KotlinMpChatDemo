@@ -80,6 +80,8 @@ dependencies {
     val androidxLegacyVersion: String by project
     implementation("androidx.legacy:legacy-support-v4:$androidxLegacyVersion")
 
+    implementation("org.slf4j:slf4j-log4j12:1.7.32")
+
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")

@@ -3,16 +3,16 @@ package dev.zieger.mpchatdemo.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import dev.zieger.mpchatdemo.common.Chat
-import kotlinx.coroutines.InternalCoroutinesApi
+import dev.zieger.mpchatdemo.common.chat.Chat
 
 class MainActivity : ComponentActivity() {
-    @InternalCoroutinesApi
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        org.apache.log4j.BasicConfigurator.configure()
 
         setContent {
-            Chat("zieger.dev/chat", 80)
+            Chat()
         }
     }
 }

@@ -1,11 +1,14 @@
 package dev.zieger.mpchatdemo.server
 
+import dev.zieger.mpchatdemo.common.Constants.INTERNAL_HOST
+import dev.zieger.mpchatdemo.common.Constants.PATH
 import dev.zieger.mpchatdemo.common.Constants.PORT
-import dev.zieger.mpchatdemo.common.dto.ChatContent
-import dev.zieger.mpchatdemo.common.dto.ChatContent.Message
-import dev.zieger.mpchatdemo.common.dto.ChatContent.Notification
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContent.Message
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContent.Notification
+import dev.zieger.mpchatdemo.server.db.ChatContents
+import dev.zieger.mpchatdemo.server.db.Users
 import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.html.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -21,154 +24,135 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.css.*
-import kotlinx.html.*
+import kotlinx.css.CSSBuilder
+import kotlinx.html.HTML
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 
-fun HTML.username() {
-    head {
-        title("KotlinMpChatDemo")
-        link(rel = "stylesheet", href = "/styles.css", type = "text/css")
-    }
-    body {
-        div { id = "root" }
-        script(src = "/static/web.js") {}
-    }
-}
-
-fun CSSBuilder.style() {
-    body {
-        backgroundColor = Color.lightGray
-        margin(5.px)
-    }
-    rule("root") {
-        width = 100.vw - 10.px
-        display = Display.flex
-    }
-}
 
 fun main(args: Array<String>) {
     org.apache.log4j.BasicConfigurator.configure()
 
-    val port = args.indexOf("-p").takeIf { it in 0 until args.lastIndex }
-        ?.let { args[it + 1].toIntOrNull() } ?: PORT
-    val path = args.indexOf("--path").takeIf { it in 0 until args.lastIndex }?.let { args[it + 1] }
-        ?.let { if (it.endsWith("/")) it else "$it/" } ?: "/"
+    val port = args.getOrNull(args.indexOf("-p") + 1)?.toIntOrNull() ?: PORT
+    val path = args.getOrNull(args.indexOf("--path") + 1) ?: PATH
 
-    val env = applicationEngineEnvironment {
-//        log = YOUR_LOGGER
+    embeddedServer(Netty, applicationEngineEnvironment {
+        connector {
+            host = INTERNAL_HOST
+            this.port = port
+        }
+
         module {
-            install(CallLogging) {
-                level = org.slf4j.event.Level.DEBUG
-            }
-            install(StatusPages) {
-                exception<Throwable> { ex ->
-                    call.respond(
-                        HttpStatusCode.InternalServerError,
-                        "${ex.javaClass.simpleName} - ${ex.message ?: "Empty Message"}"
-                    )
-                }
-            }
-//            install(DefaultHeaders)
             install(WebSockets) {
                 pingPeriod = Duration.ofSeconds(60)
             }
 
             val scope = CoroutineScope(Dispatchers.IO)
+            // This Channel will be used to send new ChatContent.
             val messageChannel = Channel<ChatContent>()
-            val messages =
-                flow { emitAll(messageChannel) }.shareIn(scope, SharingStarted.Eagerly, 1024)
-            val json = Json { classDiscriminator = "#class" }
-
+            // Emit all messageChannel values into a flow and transform it to a SharedFlow
+            // that will be used to receive the ChatContent for each connected user.
+            val messages = flow { emitAll(messageChannel) }
+                .shareIn(scope, SharingStarted.Eagerly, 1024)
+            // Get stored content from database and send it to the messageChannel.
             scope.launch { ChatContents.all().forEach { messageChannel.send(it) } }
 
-            suspend fun sendContent(content: ChatContent) {
-                ChatContents.add(content)
-                messageChannel.send(content)
-            }
-
-            fun String.fixSlash(): String = when {
-                this == "/" -> this
-                endsWith("/") -> removeSuffix("/")
-                else -> this
-            }
-
+            // The routing block is invoked for all received http requests.
             routing {
+                // Is invoked when a new user has connected to the websocket.
                 webSocket("/") {
-                    call.parameters["username"]?.also { u ->
-                        println("new user $u connected")
-                        val user = Users.getOrInsert(u)
-
-                        val sendJob = scope.launch {
-                            messages.collect {
-                                send(json.encodeToString(ChatContent.serializer(), it))
-                            }
-                        }
-
-                        val key = System.currentTimeMillis()
-                        sendContent(
-                            Notification(
-                                user,
-                                key, key.format(),
-                                "joined the chat"
-                            )
-                        )
-
-                        for (frame in incoming) when (frame) {
-                            is Frame.Text -> frame.readText().ifBlank { null }?.also { msg ->
-                                sendContent(Message(user, key, key.format(), msg))
-                            }
-                            is Frame.Ping,
-                            is Frame.Pong -> Unit
-                            is Frame.Close ->
-                                sendContent(
-                                    Notification(
-                                        user, key, key.format(),
-                                        "left chat"
-                                    )
-                                )
-                            else -> throw IllegalArgumentException(
-                                "Unknown Frame type " + "${frame::class}"
-                            )
-                        }
-                        sendJob.cancelAndJoin()
-                    } ?: run<Unit> {
-                        send(
-                            Frame.Close(
-                                CloseReason(
-                                    CloseReason.Codes.CANNOT_ACCEPT.code,
-                                    "No username provided!"
-                                )
-                            )
-                        )
-                    }
+                    handleClientConnection(scope, messages, messageChannel)
                 }
 
+
+                // Is invoked for all http calls to the root address. We will serve a HTML page
+                // with a root div  tag that will be used by jetpack compose to render the content.
                 get("/") {
-                    call.respondHtml(HttpStatusCode.OK, HTML::username)
+                    call.respondHtml(HttpStatusCode.OK, HTML::rootHtml)
                 }
+
+                // Stylesheet file for the root HTML page.
                 get("/styles.css") {
-                    call.respondCss { style() }
+                    call.respondCss(CSSBuilder::rootCss)
                 }
+
+                // Serve all files from the resources folder. The build process will put the
+                // generated JavaScript of the web module inside here.
                 static("/static") {
                     resources()
                 }
             }
         }
-
-        connector {
-            host = "0.0.0.0"
-            this.port = port
-        }
-    }
-    embeddedServer(Netty, env).start(wait = true)
+    }).start(wait = true)
 }
 
+private val json = Json { classDiscriminator = "#class" }
+
+private suspend fun DefaultWebSocketServerSession.handleClientConnection(
+    scope: CoroutineScope,
+    messages: SharedFlow<ChatContent>,
+    messageChannel: Channel<ChatContent>
+) {
+    suspend fun sendContent(content: ChatContent) {
+        // Add every new message to the database …
+        ChatContents.add(content)
+        // … and send it with our message channel to all other users.
+        messageChannel.send(content)
+    }
+
+    call.parameters["username"]?.also { u ->
+        println("new user $u connected")
+        val user = Users.getOrInsert(u)
+
+        // Collect all messages and send them to the connected user
+        val sendJob = scope.launch {
+            messages.collect {
+                send(json.encodeToString(ChatContent.serializer(), it))
+            }
+        }
+
+        // Send "user joined" notification
+        val initialKey = System.currentTimeMillis()
+        sendContent(
+            Notification(user, initialKey, initialKey.format(), "joined the chat")
+        )
+
+        for (frame in incoming) when (frame) {
+            is Frame.Text -> {
+                // User send a new message
+                val key = System.currentTimeMillis()
+                frame.readText().ifBlank { null }?.also { msg ->
+                    sendContent(Message(user, key, key.format(), msg))
+                }
+            }
+            is Frame.Ping,
+            is Frame.Pong -> Unit
+            is Frame.Close -> {
+                // User disconnected
+                val key = System.currentTimeMillis()
+                sendContent(
+                    Notification(user, key, key.format(), "left chat")
+                )
+            }
+            else -> throw IllegalArgumentException(
+                "Unknown Frame type " + "${frame::class}"
+            )
+        }
+        sendJob.cancelAndJoin()
+    } ?: handleUserNameNotProvided()
+}
+
+private suspend fun DefaultWebSocketServerSession.handleUserNameNotProvided() =
+    send(
+        Frame.Close(
+            CloseReason(CloseReason.Codes.CANNOT_ACCEPT.code, "No username provided!")
+        )
+    )
+
 fun Long.format(): String =
-    SimpleDateFormat("dd.MM.-HH:mm:ss").format(Date(this))
+    SimpleDateFormat("dd.MM.-HH:mm:ss", Locale.getDefault()).format(Date(this))
 
 suspend inline fun ApplicationCall.respondCss(builder: CSSBuilder.() -> Unit) {
     this.respondText(CSSBuilder().apply(builder).toString(), ContentType.Text.CSS)

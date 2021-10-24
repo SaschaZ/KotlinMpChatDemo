@@ -1,4 +1,4 @@
-package dev.zieger.mpchatdemo.common.dto
+package dev.zieger.mpchatdemo.common.chat.dto
 
 import kotlinx.serialization.Serializable
 

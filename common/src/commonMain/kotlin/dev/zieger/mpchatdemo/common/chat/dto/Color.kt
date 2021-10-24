@@ -1,4 +1,4 @@
-package dev.zieger.mpchatdemo.common.dto
+package dev.zieger.mpchatdemo.common.chat.dto
 
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.common.core.graphics.Color
@@ -45,10 +45,10 @@ private val Int.hexChar: String
         }
     }
 
-fun String.toColor(): dev.zieger.mpchatdemo.common.dto.Color {
+fun String.toColor(): dev.zieger.mpchatdemo.common.chat.dto.Color {
     var idx = 0
     val (red, green, blue) = removePrefix("0x").groupBy { idx++ / 2 }.map { it.value }
-    return dev.zieger.mpchatdemo.common.dto.Color(
+    return dev.zieger.mpchatdemo.common.chat.dto.Color(
         red.fromHexChar(),
         green.fromHexChar(),
         blue.fromHexChar()

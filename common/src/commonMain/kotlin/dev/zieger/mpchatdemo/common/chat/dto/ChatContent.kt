@@ -1,9 +1,25 @@
-package dev.zieger.mpchatdemo.common.dto
+package dev.zieger.mpchatdemo.common.chat.dto
 
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContentType.MESSAGE
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContentType.NOTIFICATION
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class ChatContent {
+
+    companion object {
+
+        operator fun invoke(
+            type: ChatContentType,
+            user: ChatUser,
+            key: Long,
+            timestampFormatted: String,
+            content: String
+        ): ChatContent = when (type) {
+            NOTIFICATION -> Notification(user, key, timestampFormatted, content)
+            MESSAGE -> Message(user, key, timestampFormatted, content)
+        }
+    }
 
     abstract val user: ChatUser
     abstract val type: ChatContentType
@@ -18,7 +34,7 @@ sealed class ChatContent {
         override val timestampFormatted: String,
         override val content: String
     ) : ChatContent() {
-        override val type = ChatContentType.NOTIFICATION
+        override val type = NOTIFICATION
     }
 
     @Serializable
@@ -28,7 +44,7 @@ sealed class ChatContent {
         override val timestampFormatted: String,
         override val content: String
     ) : ChatContent() {
-        override val type = ChatContentType.MESSAGE
+        override val type = MESSAGE
     }
 }
 
