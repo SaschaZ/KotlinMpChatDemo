@@ -1,4 +1,4 @@
-package dev.zieger.mpchatdemo.server
+package dev.zieger.mpchatdemo.server_socket
 
 import dev.zieger.mpchatdemo.common.Constants.PORT
 import dev.zieger.mpchatdemo.common.dto.ChatContent
@@ -25,7 +25,6 @@ import kotlinx.css.*
 import kotlinx.html.*
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
-import java.time.Duration
 import java.util.*
 
 fun HTML.username() {
