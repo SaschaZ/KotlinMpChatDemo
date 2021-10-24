@@ -12,7 +12,7 @@ fun main() {
         Url(document.URL).run {
             Chat(
                 Url(
-                    URLProtocol.WSS, host, port, encodedPath,
+                    URLProtocol.WSS, host, port, "/",
                     parameters, fragment, user, password, trailingQuery
                 )
             )
