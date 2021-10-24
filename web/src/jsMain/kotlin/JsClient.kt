@@ -10,12 +10,7 @@ import org.jetbrains.compose.web.renderComposable
 fun main() {
     renderComposable(rootElementId = "root") {
         Url(document.URL).run {
-            Chat(
-                Url(
-                    URLProtocol.HTTP, host, port, "/",
-                    parameters, fragment, user, password, trailingQuery
-                )
-            )
+            Chat(host, encodedPath)
         }
     }
 }

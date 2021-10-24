@@ -1,7 +1,7 @@
 
 
 rootProject.name = "KotlinMpChatDemo"
-include(":android:", ":common", ":desktop", ":server", ":web")
+include(":android:", ":common", ":desktop", ":server", ":server_socket", ":web")
 
 pluginManagement {
     val kotlinVersion: String by settings

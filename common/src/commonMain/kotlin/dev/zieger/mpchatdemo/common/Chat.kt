@@ -19,17 +19,15 @@ import org.jetbrains.compose.common.ui.unit.sp
 @InternalCoroutinesApi
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
-fun Chat(url: String, port: Int) = Chat(Url("$url:$port"))
-
-@InternalCoroutinesApi
-@OptIn(ExperimentalComposeWebWidgetsApi::class)
-@Composable
-fun Chat(url: Url) {
+fun Chat(
+    host: String,
+    path: String
+) {
     val fontSize: TextUnit = 25.sp
     val model = remember { ChatModel() }
     val scope = rememberCoroutineScope()
     val chat = remember {
-        ChatClient(url) {
+        ChatClient(host, path) {
             scope.launch { model.messages.add(0, this@ChatClient) }
         }
     }
