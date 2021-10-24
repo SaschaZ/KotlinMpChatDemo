@@ -24,7 +24,10 @@ actual fun TextField(
     onSubmit: () -> Unit
 ) {
     androidx.compose.material.TextField(
-        content.value, { onValueChange(it) },
+        content.value, {
+            if (it.last() == '\n') onSubmit()
+            else onValueChange(it)
+        },
         label = { label() },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { onSubmit() }),

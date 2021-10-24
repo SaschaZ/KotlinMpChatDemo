@@ -1,5 +1,6 @@
 package dev.zieger.mpchatdemo.common.chat
 
+import androidx.compose.runtime.MutableState
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
@@ -18,6 +19,7 @@ class ChatClient(
     private val host: String,
     private val path: String,
     private val port: Int,
+    private val errorState: MutableState<String?>,
     private val onNewContent: suspend (content: ChatContent) -> Unit
 ) {
 
@@ -25,6 +27,7 @@ class ChatClient(
         install(WebSockets) {
             pingInterval = 60_000
         }
+        followRedirects = true
     }
 
     private val sendChannel = Channel<String>()
@@ -46,17 +49,21 @@ class ChatClient(
         username: String,
         session: suspend DefaultClientWebSocketSession.() -> Unit
     ) {
-        when (host.contains("localhost")) {
-            false -> client.wss(path, request = {
-                host = this@ChatClient.host
-                port = this@ChatClient.port
-                parameter("username", username)
-            }, session)
-            true -> client.ws(path, request = {
-                host = this@ChatClient.host
-                port = this@ChatClient.port
-                parameter("username", username)
-            }, session)
+        try {
+            when (host.contains("localhost")) {
+                false -> client.wss(path, request = {
+                    host = this@ChatClient.host
+                    port = this@ChatClient.port
+                    parameter("username", username)
+                }, session)
+                true -> client.ws(path, request = {
+                    host = this@ChatClient.host
+                    port = this@ChatClient.port
+                    parameter("username", username)
+                }, session)
+            }
+        } catch (t: Throwable) {
+            errorState.value = "$t"
         }
     }
 }

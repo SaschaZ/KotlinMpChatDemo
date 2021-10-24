@@ -3,11 +3,80 @@
 
 left to right direction
 
+skinparam backgroundColor #666
+skinparam arrowColor #000
+skinparam packageFontColor #000
+skinparam packageFontSize 17
+skinparam packageBorderColor #CCC
+skinparam packageBackgroundColor #999
+skinparam classBackgroundColor #FFF
+skinparam classBorderColor #888
+skinparam objectBackgroundColor #FFF
+skinparam objectBorderColor #888
+skinparam titleFontSize 35
+skinparam titleFontStyle bold
+
+skinparam stereotypeC<<data>> {
+  BackgroundColor #0AF
+}
+skinparam spotChar<<data>> D
+hide class <<data>> stereotype
+
+skinparam stereotypeC<<activity>> {
+  BackgroundColor #F0A
+}
+skinparam spotChar<<activity>> A
+hide class <<activity>> stereotype
+
+skinparam stereotypeC<<fragment>> {
+  BackgroundColor #0F8
+}
+skinparam spotChar<<fragment>> F
+hide class <<fragment>> stereotype
+
+skinparam stereotypeC<<view>> {
+  BackgroundColor #F4F
+}
+skinparam spotChar<<view>> V
+hide class <<view>> stereotype
+
+skinparam stereotypeC<<viewmodel>> {
+  BackgroundColor #FF0
+}
+skinparam spotChar<<viewmodel>> M
+hide class <<viewmodel>> stereotype
+
+skinparam stereotypeC<<repository>> {
+  BackgroundColor #FA3
+}
+skinparam spotChar<<repository>> R
+hide class <<repository>> stereotype
+
+skinparam stereotypeC<<sealed>> {
+  BackgroundColor #3B9
+}
+skinparam spotChar<<sealed>> S
+hide class <<sealed>> stereotype
+
+skinparam stereotypeC<<object>> {
+  BackgroundColor #FF0
+}
+skinparam spotChar<<object>> O
+hide class <<object>> stereotype
+
+skinparam stereotypeC<<enumeration>> {
+  BackgroundColor #090
+}
+skinparam spotChar<<enumeration>> E
+hide class <<enumeration>> stereotype
+
+hide empty members
+
 component common {
 
 together {
     package jvmMain {
-        object "TextField" as JvmTextField <<composable>> {
+        object "**actual** TextField" as JvmTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -18,7 +87,7 @@ together {
         }
     }
     package jsMain {
-        object "TextField" as JsTextField <<composable>> {
+        object "**actual** TextField" as JsTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -31,17 +100,28 @@ together {
 }
     package commonMain {
 
-        class Chat {
-
+        object Chat <<composable>> {
+            host: String = "chat.zieger.dev"
+            port: Int = 443
+            path: String = "/"
+            fontSize: Int = 25
         }
 
         class ChatClient {
-
+            +ChatClient(
+            {field} -\tval host: String,
+            {field} -\tval path: String,
+            {field} -\tval port: Int,
+            {field} -\tval onNewContent: suspend (ChatContent) -> Unit
+            )
+            ---
+            +fun startSocket(username: String, onInitialized: () -> Unit): Job
+            +fun sendMessage(msg: String)
         }
 
         Chat --> ChatClient
 
-        object "TextField" as CommonTextField <<composable>> {
+        object "**expect** TextField" as CommonTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -52,11 +132,13 @@ together {
         }
 
         package dto {
-            abstract class ChatContent <<serializable>>
-            class Message <<serializable>>
-            class Notification <<serializable>>
-            Message -|> ChatContent
-            ChatContent <|- Notification
+            class ChatContent <<serializable>> {
+                +val type: ChatContentType,
+                +val user: ChatUser,
+                +val key: Long,
+                +val timestampFormatted: String,
+                +val content: String
+            }
             class ChatUser <<serializable>> {
                 +val name: String
                 +val color: Color
@@ -67,48 +149,87 @@ together {
                 +val blue: Int
             }
             ChatUser -> Color
-            Message --> ChatUser
-            Notification --> ChatUser
+            ChatContent -> ChatUser
         }
 
         Chat --> dto
         Chat -> CommonTextField
     }
 
-    CommonTextField #-- JvmTextField
-    CommonTextField #-- JsTextField
+    JvmTextField ..# CommonTextField
+    CommonTextField #.. JsTextField
 }
 
-component desktop {
-    class DesktopMain
+component [desktop] {
+    object DesktopMain {
+        +fun main()
+    }
     DesktopMain --> Chat
 }
 
 component server {
-    class Server
+    object Server {
+        +fun main()
+    }
 
     package db {
-        class Db
+        object Db {
+            +val db: Database
+        }
+        class ChatContents {
+            +val type: varchar("type", 32)
+            +val user: reference("user", Users)
+            +val key: long("key")
+            +val timestampFormatted: varchar("timestamp", 128)
+            +val content: varchar("content", 1024)
+            ---
+            +fun add(cc: ChatContent)
+            +fun all(): List<ChatContent>
+        }
         ChatContents --> Db
+        class ChatContentEntry {
+            +val id: Long
+            +var type: String
+            +var user: UserEntry
+            +var key: Long
+            +var timestampFormatted: String
+            +var content: String
+        }
         ChatContentEntry --> Db
         ChatContentEntry -> ChatContents
+        class Users {
+            +val name: varchar("name", 32)
+            +val color: varchar("color", 8)
+            ---
+            +fun getOrInsert(userName: String): ChatUser
+            -fun get(userName: String): ChatUser?
+            -fun add(userName: String, colorArgb: String): ChatUser
+        }
         Users --> Db
+        class UserEntry {
+            +val id: Long
+            +var name: String
+            +var colorArgb: String
+        }
         UserEntry --> Db
         UserEntry -> Users
     }
 
     Server -> db
     dto <-- Server
-    Chat <-- Server
 }
 
 component web {
-    class WebMain
+    object WebMain {
+        +fun main()
+    }
     WebMain --> Chat
 }
 
 component android {
-    class MainActivity <<activity>>
+    class MainActivity <<activity>> {
+        +fun onCreate(savedInstanceState: Bundle?
+    }
     MainActivity --> Chat
 }
 

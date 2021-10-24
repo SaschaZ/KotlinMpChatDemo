@@ -28,13 +28,15 @@ fun Chat(
     val model = remember { ChatModel() }
     // Create ChatClient instance and add every new message to the messages SnapShotStateList
     // of our model.
+    val errorState = mutableStateOf<String?>(null)
     val chat = remember {
-        ChatClient(host, path, port) { content -> model.messages.add(0, content) }
+        ChatClient(host, path, port, errorState) { content -> model.messages.add(0, content) }
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // Switch the UI depending on the login/connecting state of the user.
         when {
+            errorState.value != null -> ShowError(errorState, model)
             model.userName.value.isBlank() -> loggedOut(model, chat)
             model.isConnecting.value -> Text("connecting …")
             else -> LoggedIn(model, chat, fontSize)
@@ -44,14 +46,29 @@ fun Chat(
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
+private fun ShowError(
+    errorState: MutableState<String?>,
+    model: ChatModel
+) {
+    Text(errorState.value!!)
+    Button(onClick = {
+        model.userName.value = ""
+        errorState.value = null
+    }) { Text("retry") }
+}
+
+@OptIn(ExperimentalComposeWebWidgetsApi::class)
+@Composable
 fun loggedOut(
     model: ChatModel,
     chat: ChatClient
 ) = Row {
     val scope = rememberCoroutineScope { Dispatchers.Default }
+    val userName = remember { mutableStateOf("") }
 
     fun login() {
         model.isConnecting.value = true
+        model.userName.value = userName.value
         scope.launch {
             chat.startSocket(model.userName.value) {
                 model.isConnecting.value = false
@@ -60,9 +77,9 @@ fun loggedOut(
     }
 
     TextField(
-        model.userName,
+        userName,
         onValueChange = {
-            model.userName.value = it.filterNot { c -> c.isWhitespace() }
+            userName.value = it.filterNot { c -> c.isWhitespace() }
                 .ifBlank { null }?.take(32) ?: ""
         },
         maxLines = 1,
