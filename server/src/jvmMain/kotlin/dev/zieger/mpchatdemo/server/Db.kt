@@ -1,4 +1,4 @@
-package dev.zieger.mpchatdemo.server_socket
+package dev.zieger.mpchatdemo.server
 
 import dev.zieger.mpchatdemo.common.dto.*
 import org.jetbrains.exposed.dao.LongEntity

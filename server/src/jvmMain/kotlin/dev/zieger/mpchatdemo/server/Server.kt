@@ -1,4 +1,4 @@
-package dev.zieger.mpchatdemo.server_socket
+package dev.zieger.mpchatdemo.server
 
 import dev.zieger.mpchatdemo.common.Constants.PORT
 import dev.zieger.mpchatdemo.common.dto.ChatContent
@@ -6,8 +6,10 @@ import dev.zieger.mpchatdemo.common.dto.ChatContent.Message
 import dev.zieger.mpchatdemo.common.dto.ChatContent.Notification
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.html.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
+import io.ktor.http.content.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
@@ -19,10 +21,34 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.css.*
+import kotlinx.html.*
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
+
+fun HTML.username() {
+    head {
+        title("KotlinMpChatDemo")
+        link(rel = "stylesheet", href = "/styles.css", type = "text/css")
+    }
+    body {
+        div { id = "root" }
+        script(src = "/static/web.js") {}
+    }
+}
+
+fun CSSBuilder.style() {
+    body {
+        backgroundColor = Color.lightGray
+        margin(5.px)
+    }
+    rule("root") {
+        width = 100.vw - 10.px
+        display = Display.flex
+    }
+}
 
 fun main(args: Array<String>) {
     org.apache.log4j.BasicConfigurator.configure()
@@ -120,6 +146,16 @@ fun main(args: Array<String>) {
                         )
                     }
                 }
+
+                get("/") {
+                    call.respondHtml(HttpStatusCode.OK, HTML::username)
+                }
+                get("/styles.css") {
+                    call.respondCss { style() }
+                }
+                static("/static") {
+                    resources()
+                }
             }
         }
 
@@ -133,3 +169,7 @@ fun main(args: Array<String>) {
 
 fun Long.format(): String =
     SimpleDateFormat("dd.MM.-HH:mm:ss").format(Date(this))
+
+suspend inline fun ApplicationCall.respondCss(builder: CSSBuilder.() -> Unit) {
+    this.respondText(CSSBuilder().apply(builder).toString(), ContentType.Text.CSS)
+}
