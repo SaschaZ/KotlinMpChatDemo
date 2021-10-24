@@ -45,7 +45,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "dev.zieger.mpchatdemo.desktop.MainKt"
+        mainClass = "dev.zieger.mpchatdemo.desktop.DesktopMainKt"
 
         nativeDistributions {
             packageVersion = "1.0.0"

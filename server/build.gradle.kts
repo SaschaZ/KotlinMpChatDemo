@@ -52,7 +52,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("dev.zieger.mpchatdemo.server.ServerKt")
+    mainClass.set("dev.zieger.mpchatdemo.server.ServerMainKt")
 }
 
 tasks.named<Copy>("jvmProcessResources") {
@@ -77,7 +77,7 @@ tasks {
         archiveFileName.set("MpChatServerDemo.jar")
         mergeServiceFiles()
         manifest {
-            attributes(mapOf("Main-Class" to "dev.zieger.mpchatdemo.server.ServerKt"))
+            attributes(mapOf("Main-Class" to "dev.zieger.mpchatdemo.server.ServerMainKt"))
         }
         destinationDirectory.set(File(rootProject.projectDir.path))
     }

@@ -17,6 +17,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.util.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,7 +103,7 @@ private suspend fun DefaultWebSocketServerSession.handleClientConnection(
         messageChannel.send(content)
     }
 
-    call.parameters["username"]?.also { u ->
+    call.parameters.getOrNull("username")?.also { u ->
         println("new user $u connected")
         val user = Users.getOrInsert(u)
 
@@ -142,6 +143,12 @@ private suspend fun DefaultWebSocketServerSession.handleClientConnection(
         }
         sendJob.cancelAndJoin()
     } ?: handleUserNameNotProvided()
+}
+
+private fun Parameters.getOrNull(name: String): String? = try {
+    getOrFail<String>(name)
+} catch (t: Throwable) {
+    null
 }
 
 private suspend fun DefaultWebSocketServerSession.handleUserNameNotProvided() =

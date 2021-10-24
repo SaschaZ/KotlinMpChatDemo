@@ -33,6 +33,8 @@ fun Chat(
         ChatClient(host, path, port, errorState) { content -> model.messages.add(0, content) }
     }
 
+
+
     Column(modifier = Modifier.fillMaxWidth()) {
         // Switch the UI depending on the login/connecting state of the user.
         when {
