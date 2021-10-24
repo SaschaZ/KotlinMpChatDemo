@@ -30,7 +30,7 @@ class ChatClient(
 
     private fun CoroutineScope.startWebSocket(username: String) = launch {
         val json = Json { classDiscriminator = "#class" }
-        client.wss(path, request = {
+        client.ws(path, request = {
             this.host = this@ChatClient.host
             port = 9025
             parameter("username", username)
