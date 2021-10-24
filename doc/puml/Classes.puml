@@ -1,10 +1,13 @@
 @startuml
-'https://plantuml.com/class-diagram
+'https://plantuml.com/class-diagram 
+
+left to right direction
 
 component common {
 
+together {
     package jvmMain {
-        object "TextField" as JvmTextField {
+        object "TextField" as JvmTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -15,7 +18,7 @@ component common {
         }
     }
     package jsMain {
-        object "TextField" as JsTextField {
+        object "TextField" as JsTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -25,7 +28,7 @@ component common {
             onSubmit: () -> Unit = {}
         }
     }
-
+}
     package commonMain {
 
         class Chat {
@@ -36,7 +39,9 @@ component common {
 
         }
 
-        object "TextField" as CommonTextField {
+        Chat --> ChatClient
+
+        object "TextField" as CommonTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -45,6 +50,29 @@ component common {
             focusRequester: (() -> Unit) -> Unit = {},
             onSubmit: () -> Unit = {}
         }
+
+        package dto {
+            abstract class ChatContent <<serializable>>
+            class Message <<serializable>>
+            class Notification <<serializable>>
+            Message -|> ChatContent
+            ChatContent <|- Notification
+            class ChatUser <<serializable>> {
+                +val name: String
+                +val color: Color
+            }
+            class Color <<serializable>> {
+                +val red: Int
+                +val green: Int
+                +val blue: Int
+            }
+            ChatUser -> Color
+            Message --> ChatUser
+            Notification --> ChatUser
+        }
+
+        Chat --> dto
+        Chat -> CommonTextField
     }
 
     CommonTextField #-- JvmTextField
@@ -52,22 +80,35 @@ component common {
 }
 
 component desktop {
-    class Main
-    Main --> Chat
+    class DesktopMain
+    DesktopMain --> Chat
 }
 
 component server {
     class Server
-    class Db
+
+    package db {
+        class Db
+        ChatContents --> Db
+        ChatContentEntry --> Db
+        ChatContentEntry -> ChatContents
+        Users --> Db
+        UserEntry --> Db
+        UserEntry -> Users
+    }
+
+    Server -> db
+    dto <-- Server
+    Chat <-- Server
 }
 
 component web {
-    class JsClient
-    JsClient --> Chat
+    class WebMain
+    WebMain --> Chat
 }
 
 component android {
-    class MainActivity
+    class MainActivity <<activity>>
     MainActivity --> Chat
 }
 

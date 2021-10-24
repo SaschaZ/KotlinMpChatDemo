@@ -4,8 +4,8 @@ import dev.zieger.mpchatdemo.common.Constants.INTERNAL_HOST
 import dev.zieger.mpchatdemo.common.Constants.PATH
 import dev.zieger.mpchatdemo.common.Constants.PORT
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
-import dev.zieger.mpchatdemo.common.chat.dto.ChatContent.Message
-import dev.zieger.mpchatdemo.common.chat.dto.ChatContent.Notification
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContentType.MESSAGE
+import dev.zieger.mpchatdemo.common.chat.dto.ChatContentType.NOTIFICATION
 import dev.zieger.mpchatdemo.server.db.ChatContents
 import dev.zieger.mpchatdemo.server.db.Users
 import io.ktor.application.*
@@ -116,7 +116,7 @@ private suspend fun DefaultWebSocketServerSession.handleClientConnection(
         // Send "user joined" notification
         val initialKey = System.currentTimeMillis()
         sendContent(
-            Notification(user, initialKey, initialKey.format(), "joined the chat")
+            ChatContent(NOTIFICATION, user, initialKey, initialKey.format(), "joined the chat")
         )
 
         for (frame in incoming) when (frame) {
@@ -124,7 +124,7 @@ private suspend fun DefaultWebSocketServerSession.handleClientConnection(
                 // User send a new message
                 val key = System.currentTimeMillis()
                 frame.readText().ifBlank { null }?.also { msg ->
-                    sendContent(Message(user, key, key.format(), msg))
+                    sendContent(ChatContent(MESSAGE, user, key, key.format(), msg))
                 }
             }
             is Frame.Ping,
@@ -133,7 +133,7 @@ private suspend fun DefaultWebSocketServerSession.handleClientConnection(
                 // User disconnected
                 val key = System.currentTimeMillis()
                 sendContent(
-                    Notification(user, key, key.format(), "left chat")
+                    ChatContent(NOTIFICATION, user, key, key.format(), "left chat")
                 )
             }
             else -> throw IllegalArgumentException(
