@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class ChatClient(
-    private val host: String,
-    private val path: String,
+    private val url: Url,
     private val onNewContent: ChatContent.() -> Unit
 ) {
 
@@ -30,9 +29,9 @@ class ChatClient(
 
     private fun CoroutineScope.startWebSocket(username: String) = launch {
         val json = Json { classDiscriminator = "#class" }
-        client.ws(path, request = {
-            this.host = this@ChatClient.host
-            port = 9025
+        client.wss(url.encodedPath, request = {
+            host = this@ChatClient.url.host
+            port = this@ChatClient.url.port
             parameter("username", username)
         }) {
             launch { for (msg in sendChannel) send(msg) }

@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Chat("zieger.dev", "/")
+            Chat("zieger.dev/chat", 80)
         }
     }
 }
