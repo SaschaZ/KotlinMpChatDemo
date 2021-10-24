@@ -29,11 +29,7 @@ class ChatClient(
 
     private fun CoroutineScope.startWebSocket(username: String) = launch {
         val json = Json { classDiscriminator = "#class" }
-        client.wss(url.encodedPath, request = {
-            host = this@ChatClient.url.host
-            port = this@ChatClient.url.port
-            parameter("username", username)
-        }) {
+        val session: suspend DefaultClientWebSocketSession.() -> Unit = {
             launch { for (msg in sendChannel) send(msg) }
 
             for (frame in incoming) {
@@ -44,6 +40,19 @@ class ChatClient(
                     else -> Unit
                 }
             }
+        }
+
+        when (url.host.contains("localhost")) {
+            false -> client.wss(url.encodedPath, request = {
+                host = this@ChatClient.url.host
+                port = this@ChatClient.url.port
+                parameter("username", username)
+            }, session)
+            true -> client.ws(url.encodedPath, request = {
+                host = this@ChatClient.url.host
+                port = this@ChatClient.url.port
+                parameter("username", username)
+            }, session)
         }
     }
 
