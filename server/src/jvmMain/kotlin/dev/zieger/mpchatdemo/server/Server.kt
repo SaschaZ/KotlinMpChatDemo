@@ -1,4 +1,4 @@
-package dev.zieger.mpchatdemo.server_socket
+package dev.zieger.mpchatdemo.server
 
 import dev.zieger.mpchatdemo.common.Constants.PORT
 import io.ktor.application.*
