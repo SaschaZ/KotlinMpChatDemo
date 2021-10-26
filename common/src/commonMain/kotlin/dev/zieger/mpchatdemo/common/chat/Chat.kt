@@ -6,14 +6,17 @@ import dev.zieger.mpchatdemo.common.TextField
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.common.core.graphics.Color
 import org.jetbrains.compose.common.foundation.layout.Column
 import org.jetbrains.compose.common.foundation.layout.Row
+import org.jetbrains.compose.common.foundation.layout.fillMaxHeight
 import org.jetbrains.compose.common.foundation.layout.fillMaxWidth
 import org.jetbrains.compose.common.material.Button
 import org.jetbrains.compose.common.material.Text
 import org.jetbrains.compose.common.ui.Alignment
 import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
 import org.jetbrains.compose.common.ui.Modifier
+import org.jetbrains.compose.common.ui.background
 import org.jetbrains.compose.common.ui.unit.sp
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
@@ -22,26 +25,25 @@ fun Chat(
     host: String = "chat.zieger.dev",
     port: Int = 443,
     path: String = "/",
-    fontSize: Int = 25
+    fontSize: Int = 25,
+    useDarkButtonColor: Boolean = false
 ) {
     // This model represents the UI of this composable.
     val model = remember { ChatModel() }
+    val errorState = mutableStateOf<String?>(null)
     // Create ChatClient instance and add every new message to the messages SnapShotStateList
     // of our model.
-    val errorState = mutableStateOf<String?>(null)
     val chat = remember {
         ChatClient(host, path, port, errorState) { content -> model.messages.add(0, content) }
     }
 
-
-
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(1f).background(Color.LightGray)) {
         // Switch the UI depending on the login/connecting state of the user.
         when {
-            errorState.value != null -> ShowError(errorState, model)
-            model.userName.value.isBlank() -> loggedOut(model, chat)
+            errorState.value != null -> ShowError(errorState, model, useDarkButtonColor)
+            model.userName.value.isBlank() -> loggedOut(model, chat, useDarkButtonColor)
             model.isConnecting.value -> Text("connecting …")
-            else -> LoggedIn(model, chat, fontSize)
+            else -> LoggedIn(model, chat, fontSize, useDarkButtonColor)
         }
     }
 }
@@ -50,20 +52,22 @@ fun Chat(
 @Composable
 private fun ShowError(
     errorState: MutableState<String?>,
-    model: ChatModel
+    model: ChatModel,
+    useDarkButtonColor: Boolean
 ) {
     Text(errorState.value!!)
     Button(onClick = {
         model.userName.value = ""
         errorState.value = null
-    }) { Text("retry") }
+    }) { Text("retry", color = if (useDarkButtonColor) Color.Black else Color.White) }
 }
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
 fun loggedOut(
     model: ChatModel,
-    chat: ChatClient
+    chat: ChatClient,
+    useDarkButtonColor: Boolean
 ) = Row {
     val scope = rememberCoroutineScope { Dispatchers.Default }
     val userName = remember { mutableStateOf("") }
@@ -89,7 +93,9 @@ fun loggedOut(
         focusRequester = {},
         label = { Text("Username: ") }
     )
-    Button(onClick = { login() }) { Text("Ok") }
+    Button(onClick = { login() }) {
+        Text("Ok", color = if (useDarkButtonColor) Color.Black else Color.White)
+    }
 }
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
@@ -97,7 +103,8 @@ fun loggedOut(
 fun LoggedIn(
     model: ChatModel,
     chat: ChatClient,
-    fontSize: Int
+    fontSize: Int,
+    useDarkButtonColor: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -117,7 +124,9 @@ fun LoggedIn(
             label = { Text("Message: ") },
             focusRequester = {}
         )
-        Button(onClick = { send() }) { Text("Send") }
+        Button(onClick = { send() }) {
+            Text("Send", color = if (useDarkButtonColor) Color.Black else Color.White)
+        }
     }
     ChatMessageList(model.messages, fontSize.sp)
 }

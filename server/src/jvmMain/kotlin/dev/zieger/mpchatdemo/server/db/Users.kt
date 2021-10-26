@@ -9,7 +9,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
@@ -27,13 +26,19 @@ object Users : LongIdTable() {
             .also { u -> println("insert new user into DB: $u") }
     }
 
-    private fun get(userName: String): ChatUser? = transaction {
-        Users.select { name eq userName }.toList().firstOrNull()?.let {
-            ChatUser(it).also { u -> println("get user from DB: $u") }
+    fun get(userName: String): ChatUser? = transaction {
+        UserEntry.find { name eq userName }.toList().firstOrNull()?.let {
+            it.chatUser.also { u -> println("get user from DB: $u") }
         }
     }
 
     fun getOrInsert(userName: String): ChatUser = get(userName) ?: add(userName, Color().argb)
+
+    fun setColorForUser(user: ChatUser, color: Color): ChatUser? = transaction {
+        UserEntry.find { name eq user.name }.toList().firstOrNull()?.let {
+            it.colorArgb = color.argb
+        }
+    }.let { get(user.name) }
 }
 
 private operator fun ChatUser.Companion.invoke(result: ResultRow): ChatUser =

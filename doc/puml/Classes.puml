@@ -16,6 +16,9 @@ skinparam objectBorderColor #888
 skinparam titleFontSize 35
 skinparam titleFontStyle bold
 
+skinparam ObjectStereotypeFontColor<<composable>> #D0F
+skinparam ObjectStereotypeFontStyle<<composable>> bold
+
 skinparam stereotypeC<<data>> {
   BackgroundColor #0AF
 }
@@ -70,13 +73,18 @@ skinparam stereotypeC<<enumeration>> {
 skinparam spotChar<<enumeration>> E
 hide class <<enumeration>> stereotype
 
+skinparam stereotypeC<<serializable>> {
+  BackgroundColor #FF0
+}
+skinparam spotChar<<serializable>> S
+hide class <<serializable>> stereotype
+
 hide empty members
 
 component common {
 
-together {
     package jvmMain {
-        object "**actual** TextField" as JvmTextField <<composable>> {
+        object "//**actual**// TextField" as JvmTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -87,7 +95,7 @@ together {
         }
     }
     package jsMain {
-        object "**actual** TextField" as JsTextField <<composable>> {
+        object "//**actual**// TextField" as JsTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -97,7 +105,9 @@ together {
             onSubmit: () -> Unit = {}
         }
     }
-}
+
+    jvmMain -[hidden] jsMain
+
     package commonMain {
 
         object Chat <<composable>> {
@@ -114,14 +124,29 @@ together {
             {field} -\tval port: Int,
             {field} -\tval onNewContent: suspend (ChatContent) -> Unit
             )
-            ---
+            ===
             +fun startSocket(username: String, onInitialized: () -> Unit): Job
             +fun sendMessage(msg: String)
         }
 
         Chat --> ChatClient
 
-        object "**expect** TextField" as CommonTextField <<composable>> {
+        object ChatMessageList <<composable>> {
+           messages: SnapshotStateList<ChatContent>,
+           fontSize: TextUnit
+       }
+
+       Chat -> ChatMessageList
+       ChatMessageList --> dto
+
+        object "ChatContent.compose" as compose <<composable>> {
+            fontSize: TextUnit
+        }
+
+        ChatMessageList -> compose
+        compose --> dto
+
+        object "//**expect**// TextField" as CommonTextField <<composable>> {
             content: MutableState<String>,
             onValueChange: (String) -> Unit,
             label: @Composable () -> Unit = {},
@@ -168,10 +193,16 @@ component [desktop] {
 }
 
 component server {
-    object Server {
+together {
+    object ServerMain {
         +fun main()
     }
 
+    class Server {
+        +//suspend// fun start()
+    }
+    class ChatBot
+}
     package db {
         object Db {
             +val db: Database
@@ -215,8 +246,14 @@ component server {
         UserEntry -> Users
     }
 
+    ServerMain -> db
+    dto <-- ServerMain
+
+    Server --> ChatBot
+    ServerMain --> Server
+
     Server -> db
-    dto <-- Server
+    ChatBot -> db
 }
 
 component web {

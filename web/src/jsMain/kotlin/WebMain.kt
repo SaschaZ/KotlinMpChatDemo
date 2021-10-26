@@ -13,9 +13,10 @@ fun main() {
         val isLocal = url.host.contains("localhost")
         Chat(
             url.host, when (isLocal) {
-                true -> 9023
+                true -> 9024
                 false -> url.port
-            }
+            },
+            useDarkButtonColor = true
         )
     }
 }

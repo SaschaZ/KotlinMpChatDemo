@@ -8,7 +8,8 @@ data class ChatContent(
     val user: ChatUser,
     val key: Long,
     val timestampFormatted: String,
-    val content: String
+    val content: String,
+    val stored: Boolean = false
 )
 
 @Serializable

@@ -1,0 +1,219 @@
+name: MpChatDemo CI
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+#  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 15
+
+      - name: Build with Gradle
+        run: ./gradlew packageDeb packageUberJarForCurrentOS
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Cache artifacts
+        uses: actions/cache@v2
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        with:
+          path: ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
+          key: linux-${{ env.RELEASE_VERSION }}
+
+      - name: Prepare Release
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          mkdir -p ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
+          cp ./gui/build/compose/jars/*.jar ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-jvm-${{ env.RELEASE_VERSION }}.jar
+          cp ./gui/build/compose/binaries/main/deb/*.deb ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-native-${{ env.RELEASE_VERSION }}.deb
+
+
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 15
+
+      - name: Build with Gradle
+        run: ./gradlew packageDmg packageUberJarForCurrentOS
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Cache artifacts
+        uses: actions/cache@v2
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        with:
+          path: ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
+          key: mac-${{ env.RELEASE_VERSION }}
+
+      - name: Prepare Release
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          mkdir -p ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
+          cp ./gui/build/compose/jars/*.jar ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-jvm-${{ env.RELEASE_VERSION }}.jar
+          cp ./gui/build/compose/binaries/main/dmg/*.dmg ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-native-${{ env.RELEASE_VERSION }}.dmg
+
+
+  #  build-win:
+  #    runs-on: windows-latest
+  #    steps:
+  #    - uses: actions/checkout@v2
+  #
+  #    - uses: actions/setup-java@v1
+  #      with:
+  #        java-version: 15
+  #
+  #    - name: Set output
+  #      id: vars
+  #      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+  #
+  #    - name: Cache artifacts
+  #      uses: actions/cache@v2
+  #      env:
+  #        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+  #      with:
+  #        path: .\MpChatDemoWin\MpChatDemo\${{ env.RELEASE_VERSION }}
+  #        key: win-${{ env.RELEASE_VERSION }}
+  #
+  #    - name: Prepare Release
+  #      env:
+  #        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+  #      run: |
+  #        mkdir .\MpChatDemoWin\${{ env.RELEASE_VERSION }}
+  #        copy .\gui\build\compose\binaries\main\msi\*.msi ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-native-${{ env.RELEASE_VERSION }}.msi
+  ##        copy .\gui\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-jvm-${{ env.RELEASE_VERSION }}.jar
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build-linux, build-mac ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo ${{ env.RELEASE_VERSION }}
+          echo ${{ steps.vars.outputs.tag }}
+
+      - name: Cache Linux artifacts
+        uses: actions/cache@v2
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        with:
+          path: ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
+          key: linux-${{ env.RELEASE_VERSION }}
+
+      - name: Cache Mac artifacts
+        uses: actions/cache@v2
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        with:
+          path: ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
+          key: mac-${{ env.RELEASE_VERSION }}
+
+      #       - name: Cache Win artifacts
+      #         uses: actions/cache@v2
+      #         env:
+      #           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+      #         with:
+      #           path: .\MpChatDemoWin\MpChatDemo\${{ env.RELEASE_VERSION }}
+      #           key: win-${{ env.RELEASE_VERSION }}
+
+      - name: SSH Server Deploy Linux artifacts
+        uses: mdallasanta/ssh-scp-deploy@v1.1.0
+        with:
+          local: './MpChatDemoLinux/MpChatDemo'
+          remote: '~/files'
+          host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
+          port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
+          user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
+          key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+          scp_options: -vpr
+
+      - name: SSH Server Deploy Mac artifacts
+        uses: mdallasanta/ssh-scp-deploy@v1.1.0
+        with:
+          local: './MpChatDemoMac/MpChatDemo'
+          remote: '~/files'
+          host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
+          port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
+          user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
+          key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+          scp_options: -vpr
+
+      #       - name: SSH Server Deploy Win artifacts
+      #         uses: mdallasanta/ssh-scp-deploy@v1.1.0
+      #         with:
+      #           local: './MpChatDemoWin/MpChatDemo'
+      #           remote: '~/files'
+      #           host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
+      #           port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
+      #           user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
+      #           key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+      #           scp_options: -vpr
+
+
+
+      #  build-readme:
+      #      runs-on: ubuntu-latest
+      #      needs: deploy
+      #      steps:
+      #      - name: Checkout
+      #        uses: actions/checkout@v2
+      #        with:
+      #          ref: ${{ github.head_ref }}
+      #
+      #      - name: Set output
+      #        id: vars
+      #        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      #
+      #      - name: Check output
+      #        env:
+      #          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+      #        run: |
+      #          echo ${{ env.RELEASE_VERSION }}
+      #          echo ${{ steps.vars.outputs.tag }}
+      #
+      #      - name: Build Readme
+      #        env:
+      #          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+      #        run: ./buildReadme.sh ${{ env.RELEASE_VERSION }}
+      #
+      #      - name: Git Commit and Push README.md
+      #        uses: stefanzweifel/git-auto-commit-action@v4
+      #        env:
+      #          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+      #        with:
+      #          commit_message: README.md for tag ${{ env.RELEASE_VERSION }}
+      #          branch: master
+      #          commit_user_name: Sascha Zieger
+      #          commit_user_email: saschazieger@gmail.com
+      #          commit_author: Author <saschazieger@gmail.com>
+      
+      

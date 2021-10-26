@@ -18,11 +18,11 @@ data class Color(val red: Int, val green: Int, val blue: Int) {
     val color: Color
         get() = Color(red, green, blue)
 
-    val argb: String = "0x${red.hex}${green.hex}${blue.hex}"
+    val argb: String = "#${red.hex}${green.hex}${blue.hex}"
 }
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
-fun Color.toArgb(): String = "0x${red.hex}${green.hex}${blue.hex}"
+fun Color.toArgb(): String = "#${red.hex}${green.hex}${blue.hex}"
 
 private val Int.hex: String
     get() {
@@ -47,7 +47,7 @@ private val Int.hexChar: String
 
 fun String.toColor(): dev.zieger.mpchatdemo.common.chat.dto.Color {
     var idx = 0
-    val (red, green, blue) = removePrefix("0x").groupBy { idx++ / 2 }.map { it.value }
+    val (red, green, blue) = removePrefix("#").groupBy { idx++ / 2 }.map { it.value }
     return dev.zieger.mpchatdemo.common.chat.dto.Color(
         red.fromHexChar(),
         green.fromHexChar(),
@@ -55,13 +55,13 @@ fun String.toColor(): dev.zieger.mpchatdemo.common.chat.dto.Color {
     )
 }
 
-private fun List<Char>.fromHexChar(): Int {
+fun List<Char>.fromHexChar(): Int {
     val power = (2.0.pow(4)).toInt()
     return this[1].fromHexChar() * power + this[0].fromHexChar()
 }
 
 private fun Char.fromHexChar(): Int =
-    digitToIntOrNull() ?: when (this) {
+    digitToIntOrNull() ?: when (uppercase().first()) {
         'A' -> 10
         'B' -> 11
         'C' -> 12

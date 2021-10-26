@@ -6,6 +6,7 @@ import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -32,7 +33,11 @@ object ChatContents : LongIdTable() {
     }
 
     fun all(): List<ChatContent> = transaction(db) {
-        ChatContentEntry.all().toList().map { it.chatContent }
+        ChatContentEntry.all()
+            .orderBy(key to SortOrder.ASC)
+            .map { it.chatContent }
+            .toList()
+            .takeLast(128)
     }
 }
 
@@ -53,6 +58,6 @@ class ChatContentEntry(entityID: EntityID<Long>) : LongEntity(entityID) {
      */
     val chatContent: ChatContent
         get() = ChatContent(
-            ChatContentType.valueOf(type), user.chatUser, key, timestampFormatted, content
+            ChatContentType.valueOf(type), user.chatUser, key, timestampFormatted, content, true
         )
 }

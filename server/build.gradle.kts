@@ -51,10 +51,6 @@ kotlin {
     }
 }
 
-application {
-    mainClass.set("dev.zieger.mpchatdemo.server.ServerMainKt")
-}
-
 tasks.named<Copy>("jvmProcessResources") {
     val jsBrowserDistribution = rootProject.allprojects
         .first {it.name == "web" }
@@ -70,6 +66,10 @@ tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
 
     classpath(tasks.named<Jar>("jvmJar"))
+}
+
+application {
+    mainClass.set("dev.zieger.mpchatdemo.server.ServerMainKt")
 }
 
 tasks {

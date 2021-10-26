@@ -16,11 +16,11 @@ val exposedVersion: String by project
 val kotlinSerializationVersion: String by project
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
 
     defaultConfig {
-        minSdkVersion(26)
-        targetSdkVersion(31)
+        minSdk = 26
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0.0"
     }
@@ -82,7 +82,7 @@ dependencies {
 
     implementation("org.slf4j:slf4j-log4j12:1.7.32")
 
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
