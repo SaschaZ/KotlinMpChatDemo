@@ -37,8 +37,8 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           mkdir -p ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
-          cp ./gui/build/compose/jars/*.jar ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-jvm-${{ env.RELEASE_VERSION }}.jar
-          cp ./gui/build/compose/binaries/main/deb/*.deb ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-native-${{ env.RELEASE_VERSION }}.deb
+          cp ./desktop/build/compose/jars/*.jar ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-jvm-${{ env.RELEASE_VERSION }}.jar
+          cp ./desktop/build/compose/binaries/main/deb/*.deb ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-native-${{ env.RELEASE_VERSION }}.deb
 
 
   build-mac:
@@ -70,8 +70,8 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           mkdir -p ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
-          cp ./gui/build/compose/jars/*.jar ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-jvm-${{ env.RELEASE_VERSION }}.jar
-          cp ./gui/build/compose/binaries/main/dmg/*.dmg ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-native-${{ env.RELEASE_VERSION }}.dmg
+          cp ./desktop/build/compose/jars/*.jar ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-jvm-${{ env.RELEASE_VERSION }}.jar
+          cp ./desktop/build/compose/binaries/main/dmg/*.dmg ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-native-${{ env.RELEASE_VERSION }}.dmg
 
 
   #  build-win:
@@ -100,8 +100,8 @@ jobs:
   #        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
   #      run: |
   #        mkdir .\MpChatDemoWin\${{ env.RELEASE_VERSION }}
-  #        copy .\gui\build\compose\binaries\main\msi\*.msi ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-native-${{ env.RELEASE_VERSION }}.msi
-  ##        copy .\gui\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-jvm-${{ env.RELEASE_VERSION }}.jar
+  #        copy .\desktop\build\compose\binaries\main\msi\*.msi ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-native-${{ env.RELEASE_VERSION }}.msi
+  ##        copy .\desktop\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-jvm-${{ env.RELEASE_VERSION }}.jar
 
 
   deploy:
