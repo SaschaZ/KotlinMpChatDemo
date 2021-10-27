@@ -193,10 +193,10 @@ jobs:
         with:
           local: './MpChatDemoAndroid/MpChatDemo'
           remote: '~/files'
-          host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
-          port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
-          user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
-          key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+          host: ${{secrets.SSH_HOST}}
+          port: ${{secrets.SSH_PORT}}
+          user: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
           scp_options: -vpr
 
       - name: SSH Server Deploy Linux artifacts
@@ -204,10 +204,10 @@ jobs:
         with:
           local: './MpChatDemoLinux/MpChatDemo'
           remote: '~/files'
-          host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
-          port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
-          user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
-          key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+          host: ${{secrets.SSH_HOST}}
+          port: ${{secrets.SSH_PORT}}
+          user: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
           scp_options: -vpr
 
       - name: SSH Server Deploy Mac artifacts
@@ -215,10 +215,10 @@ jobs:
         with:
           local: './MpChatDemoMac/MpChatDemo'
           remote: '~/files'
-          host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
-          port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
-          user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
-          key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+          host: ${{secrets.SSH_HOST}}
+          port: ${{secrets.SSH_PORT}}
+          user: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
           scp_options: -vpr
 
       #       - name: SSH Server Deploy Win artifacts
@@ -226,10 +226,10 @@ jobs:
       #         with:
       #           local: './MpChatDemoWin/MpChatDemo'
       #           remote: '~/files'
-      #           host: ${{secrets.KBM_HELPER_RS_SSH_HOST}}
-      #           port: ${{secrets.KBM_HELPER_RS_SSH_PORT}}
-      #           user: ${{secrets.KBM_HELPER_RS_SSH_USER}}
-      #           key: ${{secrets.KBM_HELPER_RS_SSH_KEY}}
+#           host: ${{secrets.SSH_HOST}}
+#           port: ${{secrets.SSH_PORT}}
+#           user: ${{secrets.SSH_USER}}
+#           key: ${{secrets.SSH_KEY}}
       #           scp_options: -vpr
 
 
