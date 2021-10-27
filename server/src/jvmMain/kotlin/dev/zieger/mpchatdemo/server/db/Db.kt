@@ -1,11 +1,5 @@
 package dev.zieger.mpchatdemo.server.db
 
-import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.TransactionManager
@@ -35,19 +29,3 @@ private fun createTables(drop: Boolean = false) {
     }
 }
 
-fun dbMessageBridge(
-    scope: CoroutineScope,
-    msgChannel: ReceiveChannel<ChatContent>
-): SharedFlow<ChatContent> {
-    val outChannel = Channel<ChatContent>()
-    scope.launch {
-        ChatContents.all().forEach { outChannel.send(it) }
-
-        for (content in msgChannel) {
-            ChatContents.add(content)
-            outChannel.send(content)
-        }
-    }
-    return flow { emitAll(outChannel) }
-        .shareIn(scope, SharingStarted.Eagerly, 128)
-}

@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+box "Client" #LightBlue
+    actor User
+    User -> Button: User pressed "send" button
+    Button -> Chat
+    Chat -> TextView: read text content
+    return new content
+    Chat -> ChatClient: send message
+    ChatClient -> "**Clients** DefaultWebSocketServerSession" as CDWSS: send message via websocket to server
+end box
+
+box "Server" #Yellow
+    "**Servers** DefaultWebSocketServerSession" as SDWSS <- Server ++ : for each ""incoming""
+    CDWSS -->o SDWSS: web socket send/receive
+    SDWSS -> Server -- : on new ""Frame.Text""
+    participant messageChannel
+
+    DbMessageBridge -> DbMessageBridge: read all stored messages
+    DbMessageBridge -> outputChannel: send all red messages
+
+    messageChannel <- DbMessageBridge ++ : for each message
+    Server -> messageChannel: send message
+    messageChannel -> DbMessageBridge -- : on new message
+    DbMessageBridge -> DbMessageBridge: store new message in DB
+    DbMessageBridge -> outputChannel: send message
+
+    outputChannel -> msgFlow: convert to Flow
+    msgFlow <- ChatBot ++ : collect messages
+    msgFlow -> ChatBot -- : on new message
+
+end box
+
+@enduml

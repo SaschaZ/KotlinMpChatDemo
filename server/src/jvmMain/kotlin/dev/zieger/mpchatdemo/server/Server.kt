@@ -1,8 +1,8 @@
 package dev.zieger.mpchatdemo.server
 
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
+import dev.zieger.mpchatdemo.server.db.DbMessageBridge
 import dev.zieger.mpchatdemo.server.db.Users
-import dev.zieger.mpchatdemo.server.db.dbMessageBridge
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -13,13 +13,13 @@ import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.util.*
+import io.ktor.utils.io.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.css.CSSBuilder
 import kotlinx.html.HTML
@@ -48,17 +48,17 @@ class Server(
 
                 val scope = CoroutineScope(Dispatchers.IO)
                 // This Channel will be used to send new ChatContent.
-                val messageChannel = Channel<ChatContent>()
-                // Emit all messageChannel values into a flow and transform it to a SharedFlow
-                // that will be used to receive the ChatContent for each connected user.
-                val msgFlow = dbMessageBridge(scope, messageChannel)
-                ChatBot(scope, msgFlow, messageChannel)
+                val firstStage = Channel<ChatContent>()
+                val secondStage = DbMessageBridge(scope, firstStage)
+                val finalStageChannel = ChatBot(scope, secondStage, firstStage)
+                val finalStageFlow = flow { emitAll(finalStageChannel) }
+                    .shareIn(scope, SharingStarted.Eagerly, 128)
 
                 // The routing block is invoked for all received http requests.
                 routing {
                     // Is invoked when a new user has connected to the websocket.
                     webSocket("/") {
-                        handleClientConnection(scope, msgFlow, messageChannel)
+                        handleClientConnection(scope, finalStageFlow, firstStage)
                     }
 
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 fun main(args: Array<String>) = runBlocking {
     org.apache.log4j.BasicConfigurator.configure()
 
-    val port = args.getOrNull(args.indexOf("-p") + 1)?.toIntOrNull() ?: Constants.PORT
+    val port = args.getOrNull(args.indexOf("-p") + 1)?.toIntOrNull() ?: Constants.INTERNAL_PORT
     val path = args.getOrNull(args.indexOf("--path") + 1) ?: Constants.PATH
 
     Server(Constants.INTERNAL_HOST, port, path).start()

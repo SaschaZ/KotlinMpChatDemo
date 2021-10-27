@@ -13,5 +13,5 @@ data class ChatContent(
 )
 
 @Serializable
-enum class ChatContentType { NOTIFICATION, MESSAGE }
+enum class ChatContentType { NOTIFICATION, MESSAGE, ME }
 

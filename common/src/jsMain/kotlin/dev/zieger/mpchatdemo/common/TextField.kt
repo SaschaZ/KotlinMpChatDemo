@@ -6,6 +6,7 @@ import org.jetbrains.compose.common.foundation.layout.Arrangement
 import org.jetbrains.compose.common.foundation.layout.Row
 import org.jetbrains.compose.common.ui.Alignment
 import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
+import org.jetbrains.compose.web.attributes.autoFocus
 import org.jetbrains.compose.web.dom.TextInput
 
 
@@ -15,6 +16,7 @@ actual fun TextField(
     content: State<String>,
     onValueChange: (String) -> Unit,
     label: @Composable () -> Unit,
+    button: @Composable () -> Unit,
     maxLines: Int?,
     focusRequester: (() -> Unit) -> Unit, // not implemented for JS
     onSubmit: () -> Unit
@@ -22,6 +24,7 @@ actual fun TextField(
     Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
         label()
         TextInput(content.value) {
+            autoFocus()
             onInput {
                 val text = it.value
                 if (text.last() == '\n') onSubmit()
@@ -29,5 +32,6 @@ actual fun TextField(
             }
             onKeyDown { if (it.key == "Enter") onSubmit() }
         }
+        button()
     }
 }

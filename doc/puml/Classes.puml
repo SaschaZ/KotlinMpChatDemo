@@ -130,6 +130,7 @@ component common {
         }
 
         Chat --> ChatClient
+        ChatClient -> dto
 
         object ChatMessageList <<composable>> {
            messages: SnapshotStateList<ChatContent>,
@@ -183,13 +184,6 @@ component common {
 
     JvmTextField ..# CommonTextField
     CommonTextField #.. JsTextField
-}
-
-component [desktop] {
-    object DesktopMain {
-        +fun main()
-    }
-    DesktopMain --> Chat
 }
 
 component server {
@@ -247,27 +241,37 @@ together {
     }
 
     ServerMain -> db
-    dto <-- ServerMain
 
-    Server --> ChatBot
-    ServerMain --> Server
+    dto <-- Server
+    dto <-- ChatBot
+    Server -> ChatBot
+    ServerMain -> Server
 
-    Server -> db
-    ChatBot -> db
+    Server --> db
+    ChatBot --> db
 }
 
-component web {
-    object WebMain {
-        +fun main()
+together {
+    component [desktop] {
+        object DesktopMain {
+            +fun main()
+        }
+        DesktopMain --> Chat
     }
-    WebMain --> Chat
-}
 
-component android {
-    class MainActivity <<activity>> {
-        +fun onCreate(savedInstanceState: Bundle?
+    component web {
+        object WebMain {
+            +fun main()
+        }
+        WebMain --> Chat
     }
-    MainActivity --> Chat
+
+    component android {
+        class MainActivity <<activity>> {
+            +fun onCreate(savedInstanceState: Bundle?
+        }
+        MainActivity --> Chat
+    }
 }
 
 @enduml

@@ -82,6 +82,7 @@ fun loggedOut(
         }
     }
 
+    var focusRequester: () -> Unit = {}
     TextField(
         userName,
         onValueChange = {
@@ -90,11 +91,18 @@ fun loggedOut(
         },
         maxLines = 1,
         onSubmit = { login() },
-        focusRequester = {},
-        label = { Text("Username: ") }
+        focusRequester = { focusRequester = it },
+        label = { Text("Username: ") },
+        button = {
+            Button(onClick = { login() }) {
+                Text("Ok", color = if (useDarkButtonColor) Color.Black else Color.White)
+            }
+        }
     )
-    Button(onClick = { login() }) {
-        Text("Ok", color = if (useDarkButtonColor) Color.Black else Color.White)
+
+    DisposableEffect(Unit) {
+        focusRequester()
+        onDispose { }
     }
 }
 
@@ -106,6 +114,7 @@ fun LoggedIn(
     fontSize: Int,
     useDarkButtonColor: Boolean
 ) {
+    var focusRequester: () -> Unit = {}
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -122,13 +131,20 @@ fun LoggedIn(
             },
             onSubmit = { send() },
             label = { Text("Message: ") },
-            focusRequester = {}
+            button = {
+                Button(onClick = { send() }) {
+                    Text("Send", color = if (useDarkButtonColor) Color.Black else Color.White)
+                }
+            },
+            focusRequester = { focusRequester = it }
         )
-        Button(onClick = { send() }) {
-            Text("Send", color = if (useDarkButtonColor) Color.Black else Color.White)
-        }
     }
     ChatMessageList(model.messages, fontSize.sp)
+
+    DisposableEffect(Unit) {
+        focusRequester()
+        onDispose { }
+    }
 }
 
 data class ChatModel(
@@ -137,5 +153,6 @@ data class ChatModel(
     // current entered (and not send yet) message of the user
     val userMessage: MutableState<String> = mutableStateOf(""),
     // all received messages off all users
-    val messages: SnapshotStateList<ChatContent> = mutableStateListOf()
+    val messages: SnapshotStateList<ChatContent> = mutableStateListOf(),
+    val darkMode: MutableState<Boolean> = mutableStateOf(false)
 )
