@@ -1,0 +1,20 @@
+FROM openjdk:15-slim-buster
+
+ENV USER runner
+ENV GROUP runners
+ENV HOME_PATH /home/runner
+ENV PROJECT_PATH ${HOME_PATH}/kotlinMpChatDemo
+
+ARG PORT=9020
+ARG PATH=/
+
+# Add user
+RUN addgroup ${GROUP}
+RUN adduser --disabled-password --home ${HOME_PATH} -gecos '' ${USER}
+
+WORKDIR ${PROJECT_PATH}
+USER ${USER}
+
+EXPOSE ${PORT}
+
+CMD ["/bin/bash", "-c", "java -jar ./MpChatServerDemo.jar -p ${PORT} --path ${PATH}" ]

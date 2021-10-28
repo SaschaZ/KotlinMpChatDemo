@@ -1,14 +1,25 @@
 version: "3.3"
 
 services:
+  chatdemo_builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.builder
+    container_name: "chatdemo_builder"
+    volumes:
+      - ".:/home/builder/kotlinMpChatDemo"
+
   chatdemo:
     build:
       context: .
+      dockerfile: Dockerfile.server
       args:
         PORT: "9020"
-        PATH: "/chat"
+        PATH: "/"
     container_name: "chatdemo"
     restart: unless-stopped
+    volumes:
+      - ".:/home/runner/kotlinMpChatDemo"
     networks:
       - default
     expose:
@@ -17,16 +28,10 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=default"
       - "traefik.port=9020"
-      - "traefik.http.routers.chatdemo.rule=(Host(`zieger.dev`) && PathPrefix(`/chat`))"
+      - "traefik.http.routers.chatdemo.rule=Host(`chat.zieger.dev`)"
       - "traefik.http.routers.chatdemo.entrypoints=websecure"
       - "traefik.http.routers.chatdemo.tls.certresolver=myresolver"
-      # - "traefik.http.routers.chatdemo.service=chatdemo-kotlinmpchatdemo"
       - "traefik.http.routers.chatdemo.middlewares=compression, ratelimit"
-      # - "traefik.http.routers.chatdemo.middlewares=ws-header"
-      # - "traefik.http.middlewares.ws-header.headers.customrequestheaders.X-Forwarded-Proto=https"
-      # - "traefik.webservice.frontend.entryPoints=http,https"
-      # - "traefik.http.middlewares.ws-replaceprefix.replacepath.path=/"
-
 
 networks:
   default:
