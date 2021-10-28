@@ -143,13 +143,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger WebServer to build new version
-        uses: fifsky/ssh-action@v0.0.6
+        uses: appleboy/ssh-action@master
         with:
-          command: cd ./docker/KotlinMpChatDemo && git pull && ./rebuild.sh && ./restart.sh
+          script: cd ./docker/KotlinMpChatDemo && git pull && ./rebuild.sh && ./restart.sh
           host: ${{secrets.SSH_HOST}}
-          user: ${{secrets.SSH_USER}}
+          username: ${{secrets.SSH_USER}}
           port: ${{secrets.SSH_PORT}}
-          keyfile: ${{secrets.SSH_KEY}}
+          key: ${{secrets.SSH_KEY}}
       
 
   deploy:
