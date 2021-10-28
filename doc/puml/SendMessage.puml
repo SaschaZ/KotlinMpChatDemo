@@ -3,6 +3,8 @@
 
 autonumber
 
+=== Client -> Server ==
+
 box "Client" #LightBlue
     actor User
     User -> Button: User pressed "send" button
@@ -16,21 +18,28 @@ end box
 box "Server" #Yellow
     "**Servers** DefaultWebSocketServerSession" as SDWSS <- Server ++ : for each ""incoming""
     CDWSS -->o SDWSS: web socket send/receive
-    SDWSS -> Server -- : on new ""Frame.Text""
-    participant messageChannel
+    SDWSS -> Server : on new ""Frame.Text""
+    participant firstStageChannel
 
     DbMessageBridge -> DbMessageBridge: read all stored messages
-    DbMessageBridge -> outputChannel: send all red messages
+    DbMessageBridge -> secondStageChannel: send all red messages
 
-    messageChannel <- DbMessageBridge ++ : for each message
-    Server -> messageChannel: send message
-    messageChannel -> DbMessageBridge -- : on new message
+    secondStageChannel <- ChatBot ++ : for each content
+
+    firstStageChannel <- DbMessageBridge ++ : for each message
+    Server -> firstStageChannel: send message
+    firstStageChannel -> DbMessageBridge : on new message
     DbMessageBridge -> DbMessageBridge: store new message in DB
-    DbMessageBridge -> outputChannel: send message
+    DbMessageBridge -> secondStageChannel: send message
 
-    outputChannel -> msgFlow: convert to Flow
-    msgFlow <- ChatBot ++ : collect messages
-    msgFlow -> ChatBot -- : on new message
+    secondStageChannel -> ChatBot: on new content
+    ChatBot -> finalStageChannel: send user messages and bot notifications
+    finalStageChannel -> finalStageFlow: convert to Shared Flow
+
+    === Server -> Client ==
+
+    SDWSS <- finalStageFlow: collect all messages and send them to the **Servers** DefaultWebSocketServerSession
+
 
 end box
 

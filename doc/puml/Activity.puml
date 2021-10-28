@@ -1,0 +1,99 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+|**Client**|
+
+|#FFDD00|**Server**|
+
+start
+:start webserver and listening\nfor incoming connections;
+:load messages from db;
+
+:build ""SharedFlow"" to provide\nevery connected user with\nthe same chat messages;
+
+|**Client**|
+
+-[#black,dashed]->
+start
+->//Client started//;
+if (isWeb?) then (no)
+    :display native UI;
+else (yes)
+    :request landing page;
+    |**Server**|
+    :deliver landing page;
+    |**Client**|
+    :display landing page;
+endif
+
+:prompt user for username;
+
+repeat
+    repeat
+      :read input;
+    repeatwhile (<b>enter key pressed\n<b>or send button clicked)
+repeatwhile (<b>input is blank) is (yes) not (no)
+
+->//request log-in//\n//for username//;
+
+|**Server**|
+
+if (username empty?) then  (yes)
+    :send error to Client;
+    |**Client**|
+    #ff8888-ffdddd:display error;
+    stop
+else (no)
+    |**Server**|
+    if (user with name already exists in DB?) then (yes)
+        :load user data from DB;
+    else (no)
+        :add new user entry to DB;
+    endif
+endif
+
+:connect ""SharedFlow"" to websocket output;
+note right
+    messages or notification of connected
+    clients are send back to clients;
+end note
+
+fork
+    |**Client**|
+    fork
+        #00FF00:displaying received messages;
+    fork again
+        repeat
+            repeat
+              :read input;
+            repeatwhile (<b>enter key pressed\n<b>or send button clicked) is (no) not (yes)
+        repeatwhile (<b>input is blank) is (yes) not (no)
+
+fork again
+    |**Server**|
+    :listening for new messages;
+
+|**Server**|
+
+if (message starting with a '/') then (no)
+    :send message via web-\nsockets back to user;
+else (yes)
+    if (messages matches color regex?) then (yes)
+        :set new color in DB;
+        :send notification via\nwebsockets to clients;
+    else if (messages matches indirect speech regex?) then (yes)
+        :send indirect speech via\nwebsokets to clients;
+    else (no)
+        :send error message via\nwebsokets to clients;
+    endif
+endif
+
+|**Client**|
+
+#00FF00:displaying received messages;
+
+end fork
+
+stop
+
+@enduml

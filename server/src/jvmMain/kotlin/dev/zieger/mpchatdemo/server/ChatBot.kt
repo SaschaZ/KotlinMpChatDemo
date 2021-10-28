@@ -17,7 +17,6 @@ import java.util.*
 class ChatBot(
     override val scope: CoroutineScope,
     override val input: ReceiveChannel<ChatContent>,
-    private val firstStage: SendChannel<ChatContent>,
     override val output: Channel<ChatContent> = Channel()
 ) : ChatMessageBridge, ReceiveChannel<ChatContent> by output {
 
@@ -40,7 +39,7 @@ class ChatBot(
         handleColorChange(content)
             ?: handleMe(content)
             ?: run {
-                firstStage.sendNotification(
+                output.sendNotification(
                     content.user,
                     "invalid command: ${content.content}"
                 )

@@ -50,7 +50,7 @@ class Server(
                 // This Channel will be used to send new ChatContent.
                 val firstStage = Channel<ChatContent>()
                 val secondStage = DbMessageBridge(scope, firstStage)
-                val finalStageChannel = ChatBot(scope, secondStage, firstStage)
+                val finalStageChannel = ChatBot(scope, secondStage)
                 val finalStageFlow = flow { emitAll(finalStageChannel) }
                     .shareIn(scope, SharingStarted.Eagerly, 128)
 

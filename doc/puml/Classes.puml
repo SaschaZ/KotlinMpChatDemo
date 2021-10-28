@@ -1,5 +1,6 @@
 @startuml
 'https://plantuml.com/class-diagram 
+'idea.partialRender
 
 left to right direction
 
@@ -196,6 +197,7 @@ together {
         +//suspend// fun start()
     }
     class ChatBot
+    class DbMessageBridge
 }
     package db {
         object Db {
@@ -251,27 +253,28 @@ together {
     ChatBot --> db
 }
 
-together {
-    component [desktop] {
-        object DesktopMain {
-            +fun main()
-        }
-        DesktopMain --> Chat
+component desktop {
+    object DesktopMain {
+        +fun main()
     }
-
-    component web {
-        object WebMain {
-            +fun main()
-        }
-        WebMain --> Chat
-    }
-
-    component android {
-        class MainActivity <<activity>> {
-            +fun onCreate(savedInstanceState: Bundle?
-        }
-        MainActivity --> Chat
-    }
+    DesktopMain --> Chat
 }
+
+component web {
+    object WebMain {
+        +fun main()
+    }
+    WebMain --> Chat
+}
+
+component android {
+    class MainActivity <<activity>> {
+        +fun onCreate(savedInstanceState: Bundle?
+    }
+    MainActivity --> Chat
+}
+
+desktop -[hidden] web
+web -[hidden] android
 
 @enduml
