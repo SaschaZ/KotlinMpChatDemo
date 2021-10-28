@@ -139,6 +139,19 @@ jobs:
   ##        copy .\desktop\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-jvm-${{ env.RELEASE_VERSION }}.jar
 
 
+  trigger-webserver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger WebServer to build new version
+        uses: fifsky/ssh-action@v0.0.6
+        with:
+          command: cd ./docker/KotlinMpChatDemo && git pull && ./rebuild.sh && ./restart.sh
+          host: ${{secrets.SSH_HOST}}
+          user: ${{secrets.SSH_USER}}
+          port: ${{secrets.SSH_PORT}}
+          keyfile: ${{secrets.SSH_KEY}}
+      
+
   deploy:
     runs-on: ubuntu-latest
     needs: [ build-android, build-linux, build-mac ]
@@ -154,7 +167,7 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           echo ${{ env.RELEASE_VERSION }}
-          echo ${{ steps.vars.outputs.tag }}
+          echo ${{ steps.vars.outputs.tag }}        
 
       - name: Cache Android artifact
         uses: actions/cache@v2
