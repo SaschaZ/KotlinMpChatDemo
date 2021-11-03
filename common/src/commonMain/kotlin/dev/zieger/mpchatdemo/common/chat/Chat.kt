@@ -7,16 +7,11 @@ import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.core.graphics.Color
-import org.jetbrains.compose.common.foundation.layout.Column
-import org.jetbrains.compose.common.foundation.layout.Row
-import org.jetbrains.compose.common.foundation.layout.fillMaxHeight
-import org.jetbrains.compose.common.foundation.layout.fillMaxWidth
+import org.jetbrains.compose.common.foundation.layout.*
 import org.jetbrains.compose.common.material.Button
 import org.jetbrains.compose.common.material.Text
-import org.jetbrains.compose.common.ui.Alignment
-import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
-import org.jetbrains.compose.common.ui.Modifier
-import org.jetbrains.compose.common.ui.background
+import org.jetbrains.compose.common.ui.*
+import org.jetbrains.compose.common.ui.unit.dp
 import org.jetbrains.compose.common.ui.unit.sp
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
@@ -31,6 +26,7 @@ fun Chat(
     // This model represents the UI of this composable.
     val model = remember { ChatModel() }
     val errorState = mutableStateOf<String?>(null)
+
     // Create ChatClient instance and add every new message to the messages SnapShotStateList
     // of our model.
     val chat = remember {
@@ -41,7 +37,10 @@ fun Chat(
         // Switch the UI depending on the login/connecting state of the user.
         when {
             errorState.value != null -> ShowError(errorState, model, useDarkButtonColor)
-            model.userName.value.isBlank() -> loggedOut(model, chat, useDarkButtonColor)
+            model.userName.value.isBlank() -> {
+                loggedOut(model, chat, useDarkButtonColor)
+                description()
+            }
             model.isConnecting.value -> Text("connecting …")
             else -> LoggedIn(model, chat, fontSize, useDarkButtonColor)
         }
@@ -95,7 +94,7 @@ fun loggedOut(
         label = { Text("Username: ") },
         button = {
             Button(onClick = { login() }) {
-                Text("Ok", color = if (useDarkButtonColor) Color.Black else Color.White)
+                Text("ENTER", color = if (useDarkButtonColor) Color.Black else Color.White)
             }
         }
     )
@@ -144,6 +143,55 @@ fun LoggedIn(
     DisposableEffect(Unit) {
         focusRequester()
         onDispose { }
+    }
+}
+
+@OptIn(ExperimentalComposeWebWidgetsApi::class)
+@Composable
+fun description() {
+    Column(Modifier.padding(16.dp)) {
+        Text(
+            "Just enter a name of your choice and click the ENTER button to join the chat.",
+            color = Color.DarkGray
+        )
+
+        Text("\n\nAvailable commands", color = Color.Black)
+        Row(
+            Modifier.padding(8.dp), horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column {
+                Text("/color #[RGB-HEX]", color = Color.Black)
+                Text("/me …", color = Color.Black)
+            }
+            Column {
+                Text(" - change the color of your name", color = Color.DarkGray)
+                Text(" - indirect speech", color = Color.DarkGray)
+            }
+        }
+
+        Text("\nAvailable Platforms", color = Color.Black)
+        Row(
+            Modifier.padding(8.dp), horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column {
+                Text("Platform   ")
+                Text("Android")
+                Text("Linux")
+                Text("Linux")
+                Text("Mac")
+                Text("Mac")
+            }
+            Column {
+                Text("Type")
+                Text("Apk")
+                Text("Jar")
+                Text("Deb")
+                Text("Jar")
+                Text("Dmi")
+            }
+        }
     }
 }
 

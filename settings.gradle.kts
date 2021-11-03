@@ -53,43 +53,4 @@ dependencyResolutionManagement {
         maven("https://dl.bintray.com/kotlin/kotlin-eap")
         maven("https://plugins.gradle.org/m2/")
     }
-
-//    versionCatalogs {
-//        create("libs") {
-//            val kotlinVersion: String by settings
-//            version("kotlin", kotlinVersion)
-//
-//            alias("kotlin-reflect").to("org.jetbrains.kotlin", "kotlin-reflect")
-//                .versionRef("kotlin")
-//            version("coroutines", "1.+")
-//            alias("coroutines").to("org.jetbrains.kotlinx", "kotlinx-coroutines-android")
-//                .versionRef("coroutines")
-//            bundle("kotlin", listOf("kotlin-reflect", "coroutines"))
-//
-//            alias("constraintLayout").to("androidx.constraintlayout:constraintlayout:2.+")
-//            alias("coordinatorLayout").to("androidx.coordinatorlayout:coordinatorlayout:1.+")
-//            alias("appcompat").to("androidx.appcompat:appcompat:1.+")
-//            alias("recyclerview").to("androidx.recyclerview:recyclerview:1.+")
-//            alias("material").to("com.google.android.material:material:1.+")
-//
-//            alias("core-ktx").to("androidx.core:core-ktx:1.+")
-//            alias("fragment-ktx").to("androidx.fragment:fragment-ktx:1.+")
-//            bundle("ktx", listOf("core-ktx", "fragment-ktx"))
-//
-//            version("lifecycle", "2.+")
-//            alias("viewmodel-ktx").to("androidx.lifecycle", "lifecycle-viewmodel-ktx").versionRef("lifecycle")
-//            alias("livedata-ktx").to("androidx.lifecycle", "lifecycle-livedata-ktx").versionRef("lifecycle")
-//            alias("lifecycle-common").to("androidx.lifecycle", "lifecycle-common-java8").versionRef("lifecycle")
-//            bundle("lifecycle", listOf("viewmodel-ktx", "livedata-ktx", "lifecycle-common"))
-//
-//            val utilsVersion: String by settings
-//            alias("utilsTime").to("dev.zieger.utils:time:$utilsVersion")
-//            alias("utilsLog").to("dev.zieger.utils:log:$utilsVersion")
-//            alias("utilsMisc").to("dev.zieger.utils:misc:$utilsVersion")
-//            alias("utilsCoroutines").to("dev.zieger.utils:coroutines:$utilsVersion")
-//            alias("utilsObservables").to("dev.zieger.utils:observables:$utilsVersion")
-//            alias("utilsStateMachine").to("dev.zieger.utils:statemachine:$utilsVersion")
-//            bundle("utils", listOf("utilsTime", "utilsLog", "utilsMisc", "utilsCoroutines", "utilsObservables"))
-//        }
-//    }
 }

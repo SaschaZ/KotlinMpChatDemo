@@ -6,13 +6,14 @@ import dev.zieger.mpchatdemo.common.chat.dto.ChatUser
 import dev.zieger.mpchatdemo.common.chat.dto.Color
 import dev.zieger.mpchatdemo.common.chat.dto.fromHexChar
 import dev.zieger.mpchatdemo.server.db.Users
+import dev.zieger.utils.time.ITimeStamp
+import dev.zieger.utils.time.TimeFormat
+import dev.zieger.utils.time.TimeStamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ChatBot(
     override val scope: CoroutineScope,
@@ -77,19 +78,18 @@ class ChatBot(
 }
 
 suspend fun SendChannel<ChatContent>.sendNotification(user: ChatUser, content: String) {
-    val key = System.currentTimeMillis()
-    send(ChatContent(NOTIFICATION, user, key, key.format(), content))
+    val key = TimeStamp()
+    send(ChatContent(NOTIFICATION, user, key.millisLong, key.format(), content))
 }
 
 suspend fun SendChannel<ChatContent>.sendMe(user: ChatUser, content: String) {
-    val key = System.currentTimeMillis()
-    send(ChatContent(ME, user, key, key.format(), content))
+    val key = TimeStamp()
+    send(ChatContent(ME, user, key.millisLong, key.format(), content))
 }
 
 suspend fun SendChannel<ChatContent>.sendMessage(user: ChatUser, msg: String) {
-    val key = System.currentTimeMillis()
-    send(ChatContent(MESSAGE, user, key, key.format(), msg))
+    val key = TimeStamp()
+    send(ChatContent(MESSAGE, user, key.millisLong, key.format(), msg))
 }
 
-private fun Long.format(): String =
-    SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(this))
+private fun ITimeStamp.format(): String = formatTime(TimeFormat.CUSTOM("HH:mm:ss"))

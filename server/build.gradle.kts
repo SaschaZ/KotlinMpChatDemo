@@ -39,6 +39,9 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
+                val utilsVersion: String by project
+                implementation("dev.zieger.utils:time:${utilsVersion}")
+
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")

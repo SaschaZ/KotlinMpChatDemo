@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+!theme cyborg-outline
+
+autonumber
+
+skinparam backgroundColor #000
+
+title __**starting**__
+
+participant User order 1
+participant Client order 2
+participant Server order 3
+participant Web order 4
+participant Sql order 5
+
+
+Server -> Web: build module
+return html, js, css
+
+Server -> Server: start WebServer
+Server -> Sql: load last X messages
+return chat message list
+Server -> Server: setup ""SharedFlow"" of chat messages
+note over Server, Sql
+This ""SharedFlow"" instance is used to propagate the chat messages to all
+connected clients. Because it uses a replay buffer of X items, all connected
+clients will receive the same messages.
+
+The source of this ""SharedFlow"" is an internal ""Channel"". This ""Channel""
+
+end note
+
+
+newpage __**connecting**__
+
+User -> Client: browse to __""chat.zieger.dev""__
+Client -> Server: request website
+return respond landing page
+
+User <- Client: display username\ntextfield and login button
+return enter username and\npress login button
+
+Client -> Server ++ : request websocket connection\nand provide username as\nparameter
+Server -> Sql: get existing user with same name\nor insert new one
+Server <-- Sql: user entity instance
+
+Client <-- Server: accept websocket connection\nand respond with main page
+User <-- Client: display message textfield, send button\nand bind websocket input ""Channel""\nto chat message list
+Server -> Server: bind webservice output ""Channel""\nto ""SharedFlow""
+Server -> Server: sned user joined message\nto ""SharedFlow""
+Client <-- Server: send all loaded chat messages
+User <-- Client: display received messages
+
+
+newpage __**sending new message**__
+
+
+@enduml

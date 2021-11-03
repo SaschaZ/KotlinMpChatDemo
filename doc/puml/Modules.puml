@@ -1,0 +1,73 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+left to right direction
+
+
+!theme cyborg-outline
+
+hide empty members
+
+title "__Multiplatform Chat Components__"
+
+
+package common {
+    package "common" as common.common {
+      [Chat] -> [ChatClient]
+    }
+    package jvm {
+
+    }
+    package js {
+
+    }
+}
+
+package desktop {
+    [DesktopMain] --> [Chat]
+}
+
+package android {
+    [MainActivity] --> [Chat]
+}
+
+package web {
+    [WebMain] --> [Chat]
+}
+
+interface User
+
+User ...> android : uses
+User ...> desktop : uses
+
+cloud internet {
+  [ChatClient] <..> WebSocket : connect
+  User ...> WebSite : requests
+}
+
+
+package "server" {
+  WebSocket <..> [Server] : provide
+  WebSite <..> [Server] : serve
+  [Server] --> [WebMain]
+}
+
+database "sqLite" {
+    node Users
+    node Content
+    Users <- Content
+}
+
+[Server] --> sqLite
+
+
+'hide common
+'hide sqLite
+'hide web
+'hide android
+'hide desktop
+'hide internet
+'hide server
+'hide User
+
+@enduml

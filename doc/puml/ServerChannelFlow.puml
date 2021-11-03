@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+!theme cyborg-outline
+skinparam backgroundColor #000
+
+title "Channel and Flow usage"
+
+together {
+    Object Input <<Channel>> {
+        Receives messages\nsend by any client.
+    }
+    Object FinalFlow <<SharedFlow>> {
+        Contains the last X\npropagated messages.
+    }
+
+    map DbBridge {
+        DbIn=>
+        DbOut=>
+    }
+    map ChatBot {
+         BotIn=>
+         BotOut=>
+    }
+
+    Input *-> DbBridge::DbIn
+    DbBridge::DbOut *-> ChatBot::BotIn
+    ChatBot::BotOut *-> FinalFlow
+}
+
+together {
+    rectangle KTOR {
+        Object WebServiceInput <<ReceiveChannel>> {
+            Provides all messages send\nby the connected client.
+        }
+        Object WebServiceOutput <<SendChannel>> {
+            Messages send to this ""Channel"" will\nbe forwarded to the connected client.
+        }
+    }
+    WebServiceInput "0..*\t" *--> "1" Input
+    FinalFlow "1\t" *--> "0..*" WebServiceOutput
+}
+
+@enduml

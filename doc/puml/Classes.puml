@@ -113,7 +113,7 @@ component common {
 
         object Chat <<composable>> {
             host: String = "chat.zieger.dev"
-            port: Int = 443
+            port: I nt = 443
             path: String = "/"
             fontSize: Int = 25
         }
