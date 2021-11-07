@@ -1,3 +1,5 @@
+import kotlin.reflect.KMutableProperty0
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -6,22 +8,24 @@ plugins {
     id("kotlin-android")
 }
 
-group = "dev.zieger.mpchatdemo.common"
-version = "1.0-SNAPSHOT"
+inline fun <reified T> fromProps(name: String): T = project.properties[name].toString().let {
+    when (T::class) {
+        Int::class -> it.toInt()
+        else -> it
+    } as T
+}
 
-val ktorVersion: String by project
-val kotlinCoroutinesVersion: String by project
-val exposedVersion: String by project
-val kotlinSerializationVersion: String by project
+inline fun <reified V> KMutableProperty0<V>.bindProp() = set(fromProps<V>(name))
 
 android {
-    compileSdk = 31
+    ::compileSdk.bindProp()
+    buildToolsVersion = fromProps("androidBuildToolsVersion")
 
     defaultConfig {
-        minSdk = 26
-        targetSdk = 31
-        versionCode = 1
-        versionName = "1.0.0"
+        ::minSdk.bindProp()
+        ::targetSdk.bindProp()
+        ::versionCode.bindProp()
+        ::versionName.bindProp()
     }
 
     buildFeatures {
@@ -29,7 +33,8 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-alpha06"
+        val androidComposeVersion: String by project
+        kotlinCompilerExtensionVersion = androidComposeVersion
     }
 
     compileOptions {
@@ -47,7 +52,6 @@ dependencies {
 
     val androidComposeVersion: String by project
     implementation("androidx.compose.runtime:runtime:$androidComposeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$androidComposeVersion")
 
     implementation(compose.web.widgets)
     implementation("androidx.compose.ui:ui:1.0.5")
@@ -62,8 +66,13 @@ dependencies {
 
     implementation("org.slf4j:slf4j-log4j12:1.7.32")
 
+    val ktorVersion: String by project
+    val kotlinCoroutinesVersion: String by project
+    val kotlinSerializationVersion: String by project
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 }
+
+

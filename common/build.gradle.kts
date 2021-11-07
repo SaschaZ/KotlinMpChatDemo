@@ -4,9 +4,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-group = "dev.zieger.mpchatdemo.common"
-version = "1.0-SNAPSHOT"
-
 val ktorVersion: String by project
 val kotlinCoroutinesVersion: String by project
 val exposedVersion: String by project
@@ -52,7 +49,6 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.desktop.common)
-//                implementation(compose.desktop.components.splitPane)
 
                 implementation("org.slf4j:slf4j-log4j12:1.7.32")
             }

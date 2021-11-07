@@ -1,14 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform")
     application
+    kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.github.johnrengelman.shadow")
 }
-
-group = "dev.zieger.mpchatdemo.server"
-version = "1.0-SNAPSHOT"
 
 val ktorVersion: String by project
 val kotlinCoroutinesVersion: String by project

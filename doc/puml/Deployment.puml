@@ -1,13 +1,23 @@
 @startuml
 'https://plantuml.com/activity-diagram-beta
 
-skinparam arrowColor #fff
+skinparam arrowColor #FB0
 skinparam defaultFontColor #fff
+skinparam defaultFontSize 20
+skinparam defaultFontStyle bold
+skinparam activityBackgroundColor #222
+skinparam activityBorderColor #0af
+skinparam activityDiamondBackgroundColor #222
+skinparam activityStartColor #0f8
+skinparam activityDiamondBorderColor #0af
+skinparam activityEndColor #f00
 skinparam partitionBackgroundColor #333
-skinparam partitionBorderColor #fff
+skinparam partitionBorderColor #0af
 skinparam partitionBorderThickness 0.5
+skinparam partitionFontColor #f0f
 skinparam roundCorner<<roundCorner>> 25
 skinparam rectangleBackgroundColor #011111
+skinparam rectangleBorderColor #0af
 
 rectangle "" <<roundCorner>> {
     start
@@ -35,8 +45,14 @@ rectangle "" <<roundCorner>> {
                         :build Android Apk;
                     }
             end split
-            :upload artifacts to server;
-            :update README.md;
+
+            partition Ubuntu {
+                :upload artifacts to server;
+            }
+            partition Ubuntu {
+                :update README.md;
+            }
+
             split again
                 partition Ubuntu {
                     :server pul;

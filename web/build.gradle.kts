@@ -4,9 +4,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-group = "dev.zieger.mpchatdemo.web"
-version = "1.0-SNAPSHOT"
-
 val ktorVersion: String by project
 val kotlinCoroutinesVersion: String by project
 val exposedVersion: String by project
@@ -33,6 +30,5 @@ kotlin {
                 implementation("org.slf4j:slf4j-log4j12:1.7.32")
             }
         }
-        val jsTest by getting
     }
 }

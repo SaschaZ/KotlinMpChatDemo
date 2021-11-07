@@ -118,29 +118,24 @@ jobs:
         with:
           java-version: 15
 
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@v2
+
       - name: Build with Gradle
         run: .\gradlew.bat packageDmg packageUberJarForCurrentOS
 
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
-        shell: bash
-
       - name: Cache artifacts
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.get_version.outputs.tag }}
         with:
-          path: ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: win-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}
+          key: win-${{ steps.get_version.outputs.version
 
       - name: Prepare Release
-        env:
-          RELEASE_VERSION: ${{ steps.get_version.outputs.tag }}
         run: |
-          mkdir ./MpChatDemoWin/${{ env.RELEASE_VERSION }}
-          copy .\desktop\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-jvm-${{ env.RELEASE_VERSION }}.jar
-          copy .\desktop\build\compose\binaries\main\msi\*.msi ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-native-${{ env.RELEASE_VERSION }}.msi
+          mkdir ./MpChatDemoWin/${{ steps.get_version.outputs.version }}
+          copy .\desktop\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}/MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
+          copy .\desktop\build\compose\binaries\main\msi\*.msi ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}/MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
 
 
   trigger-webserver:

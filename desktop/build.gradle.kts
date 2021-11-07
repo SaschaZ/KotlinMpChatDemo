@@ -6,9 +6,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-group = "dev.zieger.mpchatdemo.desktop"
-version = "1.0-SNAPSHOT"
-
 val ktorVersion: String by project
 val kotlinCoroutinesVersion: String by project
 val kotlinSerializationVersion: String by project
