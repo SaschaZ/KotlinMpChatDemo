@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./fooboo
-          key: win-fooboo
+          key: win-fooboo2
 
       - name: Prepare Release
         run: |
@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./fooboo
-          key: win-fooboo
+          key: win-fooboo2
 
       - name: test cache
         run: cat ./fooboo/test.txt
