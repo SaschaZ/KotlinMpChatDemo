@@ -123,7 +123,7 @@ jobs:
         uses: battila7/get-version-action@v2
 
       - name: Build with Gradle
-        run: .\gradlew.bat packageDmg packageUberJarForCurrentOS
+        run: .\gradlew.bat packageMsi packageUberJarForCurrentOS
 
       - name: Cache artifacts
         uses: actions/cache@v2

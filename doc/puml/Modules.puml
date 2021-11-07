@@ -204,6 +204,7 @@ legend
 |_ <color:#0099FF>**server**</color>
   |_ src
     |_ jvmMain
+  |_ build.gradle.kts
 |_ <color:#0099FF>**web**</color>
   |_ src
     |_ <color:orange>**jsMain**</color>
