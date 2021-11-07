@@ -124,18 +124,19 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        shell: bash
 
       - name: Cache artifacts
         uses: actions/cache@v2
         env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.get_version.outputs.tag }}
         with:
           path: ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}
           key: win-${{ env.RELEASE_VERSION }}
 
       - name: Prepare Release
         env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.get_version.outputs.tag }}
         run: |
           mkdir ./MpChatDemoWin/${{ env.RELEASE_VERSION }}
           copy .\desktop\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-windows-jvm-${{ env.RELEASE_VERSION }}.jar
