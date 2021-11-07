@@ -128,14 +128,13 @@ jobs:
       - name: Cache artifacts
         uses: actions/cache@v2
         with:
-          path: .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
+          path: ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}
           key: win-${{ steps.get_version.outputs.version }}
 
       - name: Prepare Release
         run: |
           mkdir .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
           copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
-          dir .\desktop\build\compose\binaries\main
           copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
 
 

@@ -2,12 +2,16 @@ package dev.zieger.mpchatdemo.common.chat
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import dev.zieger.mpchatdemo.common.Table
 import dev.zieger.mpchatdemo.common.TextField
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.core.graphics.Color
-import org.jetbrains.compose.common.foundation.layout.*
+import org.jetbrains.compose.common.foundation.layout.Column
+import org.jetbrains.compose.common.foundation.layout.Row
+import org.jetbrains.compose.common.foundation.layout.fillMaxHeight
+import org.jetbrains.compose.common.foundation.layout.fillMaxWidth
 import org.jetbrains.compose.common.material.Button
 import org.jetbrains.compose.common.material.Text
 import org.jetbrains.compose.common.ui.*
