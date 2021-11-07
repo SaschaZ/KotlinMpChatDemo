@@ -31,4 +31,4 @@ jobs:
           key: win-fooboo
 
       - name: test cache
-        run: type .\KbmHelperWin\fooboo\test.txt
+        run: type .\\KbmHelperWin\\fooboo\\test.txt
