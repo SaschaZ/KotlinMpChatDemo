@@ -129,7 +129,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}
-          key: win-${{ steps.get_version.outputs.version
+          key: win-${{ steps.get_version.outputs.version }}
 
       - name: Prepare Release
         run: |
