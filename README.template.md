@@ -1,4 +1,4 @@
-# KbmHelper
+# KotlinMpChatDemo
 
 [![KbmHelper CI](https://github.com/SaschaZ/KotlinMpChatDemo/actions/workflows/main.yml/badge.svg?branch=%%LATEST_TAG%%)](https://github.com/SaschaZ/KotlinMpChatDemo/actions/workflows/main.yml)
 
