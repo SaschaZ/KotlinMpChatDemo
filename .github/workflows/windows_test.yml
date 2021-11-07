@@ -8,9 +8,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Prepare Cache artifacts
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          echo "::add-path::C:\msys64\usr\bin"
 
       - name: Cache artifacts
         uses: actions/cache@v2
