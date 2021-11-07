@@ -118,6 +118,9 @@ jobs:
         with:
           java-version: 15
 
+      - name: Build with Gradle
+        run: gradlew.bat packageDmg packageUberJarForCurrentOS
+
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
