@@ -10,12 +10,10 @@ jobs:
       - name: Cache artifacts
         uses: actions/cache@v2
         with:
-          path: .\\KbmHelperWin}\\KbmHelper\\fooboo
+          path: ./KbmHelperWin/KbmHelper/fooboo
           key: win-fooboo
 
       - name: Prepare Release
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           mkdir .\\KbmHelperWin\\fooboo
           echo "fooboo" > .\\KbmHelperWin\\fooboo\\test.txt
