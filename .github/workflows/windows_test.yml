@@ -10,7 +10,9 @@ jobs:
       - name: Prepare Cache artifacts
         if: ${{ runner.os == 'Windows' }}
         run: |
+          echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
           echo "::add-path::C:\msys64\usr\bin"
+          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
 
       - name: Cache artifacts
         uses: actions/cache@v2
