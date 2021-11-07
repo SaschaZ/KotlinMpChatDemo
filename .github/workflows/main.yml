@@ -123,7 +123,7 @@ jobs:
 
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
         shell: bash
 
       - name: Cache artifacts

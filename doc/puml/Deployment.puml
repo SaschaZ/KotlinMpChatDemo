@@ -1,44 +1,54 @@
 @startuml
 'https://plantuml.com/activity-diagram-beta
 
-start
-:new tag was pushed;
-if (tag matches pattern '""v[0-9]+\.[0-9]+\.[0-9]+""') then (true)
-    :start actions;
-        split
+skinparam arrowColor #fff
+skinparam defaultFontColor #fff
+skinparam partitionBackgroundColor #333
+skinparam partitionBorderColor #fff
+skinparam partitionBorderThickness 0.5
+skinparam roundCorner<<roundCorner>> 25
+skinparam rectangleBackgroundColor #011111
+
+rectangle "" <<roundCorner>> {
+    start
+    :new tag was pushed;
+    if (tag matches pattern '""v[0-9]+\.[0-9]+\.[0-9]+""') then (true)
+        :start actions;
             split
+                split
+                    partition Ubuntu {
+                        :build Linux jar;
+                        :build Linux Deb;
+                    }
+                split again
+                    partition Windows {
+                        :build Windows Jar;
+                        :build Windows Msi;
+                    }
+                split again
+                    partition Mac {
+                        :build Osx Jar;
+                        :build Osx Dmi;
+                    }
+                split again
+                    partition Ubuntu {
+                        :build Android Apk;
+                    }
+            end split
+            :upload artifacts to server;
+            :update README.md;
+            split again
                 partition Ubuntu {
-                    :build Linux jar;
-                    :build Linux Deb;
-                }
-            split again
-                partition Windows* {
-                    :build Windows Msi;
-                }
-            split again
-                partition Mac {
-                    :build Osx Jar;
-                    :build Osx Dmi;
-                }
-            split again
-                partition Ubuntu {
-                    :build Android Apk;
+                    :server pul;
+                    :server rebuild;
+                    :server restart;
                 }
         end split
-        :upload artifacts to server;
-        :update README.md;
-        split again
-            partition Ubuntu {
-                :server pul;
-                :server rebuild;
-                :server restart;
-            }
-    end split
-else (false)
+    else (false)
+        stop
+    endif
+
+
     stop
-endif
-
-
-stop
-
+}
 @enduml
