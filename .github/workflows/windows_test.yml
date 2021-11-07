@@ -7,19 +7,21 @@ jobs:
   build-win:
     runs-on: windows-latest
     steps:
-      - name: Cache artifacts
+      - name: Prepare Cache artifacts
         if: matrix.os == 'windows-latest'
         shell: cmd
         run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
-      - uses: actions/cache@v2
+
+      - name: Cache artifacts
+        uses: actions/cache@v2
         with:
           path: ./fooboo
           key: win-fooboo
 
-          - name: Prepare Release
-            run: |
-              mkdir .\\fooboo
-              echo "boofoo" > .\\fooboo\\test.txt
+            - name: Prepare Release
+              run: |
+                mkdir .\\fooboo
+                echo "boofoo" > .\\fooboo\\test.txt
 
   deploy:
     runs-on: ubuntu-latest
