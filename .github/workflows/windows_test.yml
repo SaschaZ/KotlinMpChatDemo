@@ -15,8 +15,8 @@ jobs:
       - name: Cache artifacts
         uses: actions/cache@v2
         with:
-          path: ./fooboo
-          key: win-fooboo2
+          path: .\\fooboo
+          key: win-fooboo3
 
       - name: Prepare Release
         run: |
@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./fooboo
-          key: win-fooboo2
+          key: win-fooboo3
 
       - name: test cache
         run: cat ./fooboo/test.txt
