@@ -7,18 +7,10 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-val ktorVersion: String by project
-val kotlinCoroutinesVersion: String by project
-val exposedVersion: String by project
-val kotlinSerializationVersion: String by project
-
 kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
-        }
-        testRuns["test"].executionTask.configure {
-            useJUnit()
         }
         withJava()
     }
@@ -27,18 +19,21 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
 
+                val ktorVersion: String by project
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
                 implementation("io.ktor:ktor-html-builder:$ktorVersion")
 
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.221-kotlin-1.5.21")
-                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
 
+                val kotlinSerializationVersion: String by project
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
                 val utilsVersion: String by project
                 implementation("dev.zieger.utils:time:${utilsVersion}")
 
+                val exposedVersion: String by project
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
@@ -47,7 +42,6 @@ kotlin {
                 implementation("org.slf4j:slf4j-log4j12:1.7.32")
             }
         }
-        val jvmTest by getting
     }
 }
 

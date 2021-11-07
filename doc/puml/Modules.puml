@@ -85,35 +85,25 @@ newpage
 legend
 **Root**
 |_ <color:#0099FF>android</color>
-  |_ <color:green>**build.gradle.kts**</color>
-|_ <color:#0099FF>**common**
-  |_ build.gradle.kts
-|_ <color:#0099FF>**desktop**</color>
-  |_ build.gradle.kts
-|_ <color:#0099FF>**server**</color>
-  |_ build.gradle.kts
-|_ <color:#0099FF>**web**</color>
-  |_ build.gradle.kts
-|_ build.gradle.kts
-|_ gradle.properties.kts
-|_ settings.gradle.kts
-end legend
-
-newpage
-
-legend
-**Root**
-|_ <color:#0099FF>android</color>
-  |_ build.gradle.kts
-|_ <color:#0099FF>common
   |_ src
-    |_ <color:orange>**commonMain**</color>
-  |_ <color:green>build.gradle.kts</color>
+    |_ <color:orange>**jvmMain**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**common**</color>
+  |_ src
+    |_ commonMain
+    |_ jvmMain
+    |_ jsMain
+  |_ build.gradle.kts
 |_ <color:#0099FF>**desktop**</color>
+  |_ src
+    |_ jvmMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**server**</color>
-  |_ build.gradle.kts
+  |_ src
+    |_ jvmMain
 |_ <color:#0099FF>**web**</color>
+  |_ src
+    |_ jsMain
   |_ build.gradle.kts
 |_ build.gradle.kts
 |_ gradle.properties.kts
@@ -150,11 +140,13 @@ legend
 |_ <color:#0099FF>android</color>
   |_ build.gradle.kts
 |_ <color:#0099FF>**common**</color>
+  |_ src
     |_ commonMain
     |_ jvmMain
     |_ jsMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**desktop**</color>
+  |_ src
     |_ <color:orange>**jvmMain**</color>
   |_ <color:green>**build.gradle.kts**</color>
 |_ <color:#0099FF>**server**</color>
@@ -172,11 +164,19 @@ legend
 **Root**
 |_ <color:#0099FF>android</color>
   |_ build.gradle.kts
-|_ <color:#0099FF>**common**
+|_ <color:#0099FF>**common**</color>
+  |_ src
+    |_ commonMain
+    |_ jvmMain
+    |_ jsMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**desktop**</color>
+  |_ src
+    |_ jvmMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**server**</color>
+  |_ src
+    |_ <color:orange>**jvmMain**</color>
   |_ <color:green>**build.gradle.kts**</color>
 |_ <color:#0099FF>**web**</color>
   |_ build.gradle.kts
@@ -192,12 +192,21 @@ legend
 |_ <color:#0099FF>**android**</color>
   |_ build.gradle.kts
 |_ <color:#0099FF>**common**</color>
+  |_ src
+    |_ commonMain
+    |_ jvmMain
+    |_ jsMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**desktop**</color>
+  |_ src
+    |_ jvmMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**server**</color>
-  |_ build.gradle.kts
+  |_ src
+    |_ jvmMain
 |_ <color:#0099FF>**web**</color>
+  |_ src
+    |_ <color:orange>**jsMain**</color>
   |_ <color:green>**build.gradle.kts**</color>
 |_ build.gradle.kts
 |_ gradle.properties.kts
