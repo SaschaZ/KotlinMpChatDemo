@@ -2,9 +2,176 @@
 'https://plantuml.com/component-diagram
 
 left to right direction
+skinparam legendBackgroundColor #011
+skinparam legendBorderColor #999
+skinparam legendFontColor #999
+skinparam leDbuild.gradle.kts
+|_ <color:#0099FF>**common**
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ <color:green>**build.gradle.kts**</color>
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
 
+newpage
 
-!theme cyborg-outline
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**common**
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ build.gradle.kts
+|_ <color:green>**gradle.properties.kts**</color>
+|_ settings.gradle.kts
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**common**
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ <color:green>**settings.gradle.kts**</color>
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**common**
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**desktop**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**server**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**web**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**common**
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**common**
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**common**
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**common**
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ <color:#0099FF>**web**</color>
+  |_ build.gradle.kts
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
+
+newpage
+
+legend
+**Root**
+|_ <color:#0099FF>**android**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**common**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**desktop**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**server**</color>
+  |_ build.gradle.kts
+|_ <color:#0099FF>**web**</color>
+  |_ <color:green>**build.gradle.kts**</color>
+|_ build.gradle.kts
+|_ gradle.properties.kts
+|_ settings.gradle.kts
+end legend
+
+newpage
 
 hide empty members
 

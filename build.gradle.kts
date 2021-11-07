@@ -22,7 +22,7 @@ allprojects {
             // OptIn Annotation
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
 
-            // Enable experimental coroutines APIs
+            // Enable experimental APIs
             freeCompilerArgs =
                 freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.Experimental"
@@ -30,5 +30,14 @@ allprojects {
         }
 
         kotlinOptions.jvmTarget = "1.8"
+    }
+
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven("https://jitpack.io")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }

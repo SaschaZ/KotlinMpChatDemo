@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:new tag was pushed;
+if (tag matches pattern '""v[0-9]+\.[0-9]+\.[0-9]+""') then (true)
+    :start actions;
+    split
+        partition Ubuntu {
+            :build Linux jar;
+            :build Linux Deb;
+        }
+    split again
+        partition Windows* {
+            :build Windows Msi;
+        }
+    split again
+        partition Mac {
+            :build Osx Jar;
+            :build Osx Dmi;
+        }
+    split again
+        partition Ubuntu {
+            :build Android Apk;
+        }
+    split again
+        partition Ubuntu {
+            :server pul;
+            :server rebuild;
+            :server restart;
+        }
+    end split
+    :upload artifacts to server;
+    :update README.md;
+else (false)
+    stop
+endif
+
+
+stop
+
+@enduml

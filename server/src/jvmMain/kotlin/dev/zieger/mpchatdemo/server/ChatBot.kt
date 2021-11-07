@@ -10,26 +10,15 @@ import dev.zieger.utils.time.ITimeStamp
 import dev.zieger.utils.time.TimeFormat
 import dev.zieger.utils.time.TimeStamp
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.launch
 
 class ChatBot(
-    override val scope: CoroutineScope,
-    override val input: ReceiveChannel<ChatContent>,
-    override val output: Channel<ChatContent> = Channel()
-) : ChatMessageBridge, ReceiveChannel<ChatContent> by output {
+    scope: CoroutineScope,
+    input: ReceiveChannel<ChatContent>
+) : ChatMessagePipe(scope, input) {
 
-    init {
-        scope.launch {
-            for (chatContent in input) {
-                onNewMessage(chatContent)
-            }
-        }
-    }
-
-    private suspend fun onNewMessage(content: ChatContent) {
+    override suspend fun onNewMessage(content: ChatContent) {
         if (!content.content.startsWith("/")) {
             output.send(content)
             return
