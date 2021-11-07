@@ -121,7 +121,6 @@ jobs:
       - name: Get latest release version number
         id: get_version
         uses: battila7/get-version-action@v2
-        run: echo ${{ steps.get_version.outputs.version }}
 
       - name: Build with Gradle
         run: .\gradlew.bat packageDmg packageUberJarForCurrentOS
