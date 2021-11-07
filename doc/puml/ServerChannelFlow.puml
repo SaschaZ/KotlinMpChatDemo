@@ -14,18 +14,18 @@ together {
         Contains the last X\npropagated messages.
     }
 
-    map DbBridge {
-        DbIn=>
-        DbOut=>
+    object DbBridge {
+        Loads the last X messages\nfrom the DB and stores all\nreceived messages in the DB.
     }
-    map ChatBot {
-         BotIn=>
-         BotOut=>
+    object ChatBot {
+        Parses all messages starting with ""/"":
+        - ""/color #000000"" -> changes color of user
+        - ""/me …"" -> indirect speech
     }
 
-    Input *-> DbBridge::DbIn
-    DbBridge::DbOut *-> ChatBot::BotIn
-    ChatBot::BotOut *-> FinalFlow
+    Input "1" *-> "1" DbBridge
+    DbBridge "1" *-> "1" ChatBot
+    ChatBot "1" *-> "1" FinalFlow
 }
 
 together {

@@ -16,22 +16,26 @@ import org.jetbrains.compose.common.ui.unit.TextUnit
 @Composable
 fun ChatMessageList(
     messages: SnapshotStateList<ChatContent>,
-    fontSize: TextUnit
+    fontSize: TextUnit,
+    timeFontSize: TextUnit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        messages.forEach { it.compose(fontSize) }
+        messages.forEach { it.compose(fontSize, timeFontSize) }
     }
 }
 
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
-private fun ChatContent.compose(fontSize: TextUnit) {
+private fun ChatContent.compose(
+    fontSize: TextUnit,
+    timeFontSize: TextUnit
+) {
     Box {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("[${timestampFormatted}] ", size = fontSize)
+            Text("[${timestampFormatted}] ", size = timeFontSize)
             when (type) {
                 ChatContentType.NOTIFICATION -> {
                     Text("\"${user.name}\" ", size = fontSize, color = user.color.color)

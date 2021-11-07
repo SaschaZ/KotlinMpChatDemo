@@ -12,8 +12,8 @@ title __**starting**__
 participant User order 1
 participant Client order 2
 participant Server order 3
-participant Web order 4
-participant Sql order 5
+participant Sql order 4
+participant Web order 5
 
 
 Server -> Web: build module
@@ -27,13 +27,14 @@ note over Server, Sql
 This ""SharedFlow"" instance is used to propagate the chat messages to all
 connected clients. Because it uses a replay buffer of X items, all connected
 clients will receive the same messages.
-
-The source of this ""SharedFlow"" is an internal ""Channel"". This ""Channel""
-
 end note
 
-
 newpage __**connecting**__
+
+participant User order 1
+participant Client order 2
+participant Server order 3
+participant Sql order 4
 
 User -> Client: browse to __""chat.zieger.dev""__
 Client -> Server: request website
@@ -50,11 +51,25 @@ Client <-- Server: accept websocket connection\nand respond with main page
 User <-- Client: display message textfield, send button\nand bind websocket input ""Channel""\nto chat message list
 Server -> Server: bind webservice output ""Channel""\nto ""SharedFlow""
 Server -> Server: sned user joined message\nto ""SharedFlow""
-Client <-- Server: send all loaded chat messages
+Client <-- Server: send all messages
 User <-- Client: display received messages
 
 
 newpage __**sending new message**__
 
+participant User order 1
+participant Client order 2
+participant Server order 3
+participant Sql order 4
+participant ChatBot order 5
+
+User -> Client: Entered message in the textfield and\npressed send button.
+Client -> Server: send message
+Server -> Server: send message\nto ""SharedFlow""
+Server -> Sql: store message
+Server -> ChatBot: process message
+ChatBot -> ChatBot:
+Server -> Client: send message
+Client -> User: add new message to list
 
 @enduml

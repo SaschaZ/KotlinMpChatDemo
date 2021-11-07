@@ -216,68 +216,91 @@ end legend
 
 newpage
 
-hide empty members
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ src
+    |_ <color:orange>**jvmMain**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>common
+  |_ src
+    |_ <color:orange>**commonMain**</color>
+    |_ <color:orange>**jvmMain**</color>
+    |_ <color:orange>**jsMain**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>desktop</color>
+  |_ src
+    |_ <color:orange>**jvmMain**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>server</color>
+  |_ src
+    |_ <color:orange>**jvmMain**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>web</color>
+  |_ src
+    |_ <color:orange>**jsMain**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:green>build.gradle.kts</color>
+|_ <color:green>gradle.properties.kts</color>
+|_ <color:green>settings.gradle.kts</color>
+end legend
 
-title "__Multiplatform Chat Components__"
+newpage
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**MainActivity.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**Chat.kts**</color>
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ Table.kt
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Table.kt
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Table.kt
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>desktop</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**DesktopMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>server</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**ServerMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>web</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**WebMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:green>build.gradle.kts</color>
+|_ <color:green>gradle.properties.kts</color>
+|_ <color:green>settings.gradle.kts</color>
+end legend
 
-
-package common {
-    package "common" as common.common {
-      [Chat] -> [ChatClient]
-    }
-    package jvm {
-
-    }
-    package js {
-
-    }
-}
-
-package desktop {
-    [DesktopMain] --> [Chat]
-}
-
-package android {
-    [MainActivity] --> [Chat]
-}
-
-package web {
-    [WebMain] --> [Chat]
-}
-
-interface User
-
-User ...> android : uses
-User ...> desktop : uses
-
-cloud internet {
-  [ChatClient] <..> WebSocket : connect
-  User ...> WebSite : requests
-}
-
-
-package "server" {
-  WebSocket <..> [Server] : provide
-  WebSite <..> [Server] : serve
-  [Server] --> [WebMain]
-}
-
-database "sqLite" {
-    node Users
-    node Content
-    Users <- Content
-}
-
-[Server] --> sqLite
-
-
-'hide common
-'hide sqLite
-'hide web
-'hide android
-'hide desktop
-'hide internet
-'hide server
-'hide User
 
 @enduml

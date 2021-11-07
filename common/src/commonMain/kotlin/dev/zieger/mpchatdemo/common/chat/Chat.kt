@@ -25,6 +25,7 @@ fun Chat(
     port: Int = 443,
     path: String = "/",
     fontSize: Int = 25,
+    timeFontSize: Int = 15,
     useDarkButtonColor: Boolean = false
 ) {
     // This model represents the UI of this composable.
@@ -46,7 +47,7 @@ fun Chat(
                 description()
             }
             model.isConnecting.value -> Text("connecting …")
-            else -> LoggedIn(model, chat, fontSize, useDarkButtonColor)
+            else -> LoggedIn(model, chat, fontSize, timeFontSize, useDarkButtonColor)
         }
     }
 }
@@ -115,6 +116,7 @@ fun LoggedIn(
     model: ChatModel,
     chat: ChatClient,
     fontSize: Int,
+    timeFontSize: Int,
     useDarkButtonColor: Boolean
 ) {
     var focusRequester: () -> Unit = {}
@@ -142,7 +144,7 @@ fun LoggedIn(
             focusRequester = { focusRequester = it }
         )
     }
-    ChatMessageList(model.messages, fontSize.sp)
+    ChatMessageList(model.messages, fontSize.sp, timeFontSize.sp)
 
     DisposableEffect(Unit) {
         focusRequester()
@@ -153,47 +155,128 @@ fun LoggedIn(
 @OptIn(ExperimentalComposeWebWidgetsApi::class)
 @Composable
 fun description() {
-    Column(Modifier.padding(16.dp)) {
-        Text(
-            "Just enter a name of your choice and click the ENTER button to join the chat.",
-            color = Color.DarkGray
-        )
+    Column(Modifier.padding(16.dp).fillMaxWidth().fillMaxHeight(1f)) {
+        Row {
+            Text(
+                "Just enter a name of your choice and click the ENTER button to join the chat.",
+                color = Color.DarkGray,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
 
-        Text("\n\nAvailable commands", color = Color.Black)
-        Row(
-            Modifier.padding(8.dp), horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Top
-        ) {
-            Column {
-                Text("/color #[RGB-HEX]", color = Color.Black)
-                Text("/me …", color = Color.Black)
-            }
-            Column {
-                Text(" - change the color of your name", color = Color.DarkGray)
-                Text(" - indirect speech", color = Color.DarkGray)
+        Text(
+            "Available commands", color = Color.Black,
+            modifier = Modifier.padding(8.dp)
+        )
+        Table(Modifier.padding(24.dp)) {
+            Tr {
+                Td {
+                    Tr {
+                        Text(
+                            "/color #[RGB-HEX]",
+                            modifier = Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "/me …",
+                            modifier = Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                }
+                Td {
+                    Tr {
+                        Text(
+                            "- change the color of your name",
+                            color = Color.DarkGray,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "- indirect speech",
+                            color = Color.DarkGray,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
             }
         }
 
-        Text("\nAvailable Platforms", color = Color.Black)
-        Row(
-            Modifier.padding(8.dp), horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.Top
-        ) {
-            Column {
-                Text("Platform   ")
-                Text("Android")
-                Text("Linux")
-                Text("Linux")
-                Text("Mac")
-                Text("Mac")
-            }
-            Column {
-                Text("Type")
-                Text("Apk")
-                Text("Jar")
-                Text("Deb")
-                Text("Jar")
-                Text("Dmi")
+        Text("\nAvailable Platforms", color = Color.Black, modifier = Modifier.padding(8.dp))
+        Table(Modifier.padding(24.dp)) {
+            Tr {
+                Td {
+                    Tr {
+                        Text(
+                            "Android",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "Linux",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "Mac",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                }
+                Td {
+                    Tr {
+                        Text(
+                            "Apk",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "Jar",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "Jar",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                }
+                Td {
+                    Tr {
+                        Text(
+                            "",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "Deb",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                    Tr {
+                        Text(
+                            "Dmi",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
+                }
             }
         }
     }

@@ -1,17 +1,20 @@
+@file:Suppress("FunctionName")
+
 package dev.zieger.mpchatdemo.common
 
 import androidx.compose.runtime.Composable
+import org.jetbrains.compose.common.ui.ExperimentalComposeWebWidgetsApi
+import org.jetbrains.compose.common.ui.Modifier
 
+@ExperimentalComposeWebWidgetsApi
 @Composable
-expect fun Table(block: @Composable TableScope.() -> Unit)
+expect fun Table(modifier: Modifier, block: @Composable TableScope.() -> Unit)
 
-expect class TableScope : ITableScope
-
-interface ITableScope {
+expect class TableScope {
 
     @Composable
-    fun Column(block: @Composable () -> Unit)
+    fun Tr(block: @Composable (TableScope.() -> Unit))
 
     @Composable
-    fun Row(block: @Composable () -> Unit)
+    fun Td(block: @Composable (TableScope.() -> Unit))
 }

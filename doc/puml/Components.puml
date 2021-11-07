@@ -1,0 +1,89 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+left to right direction
+'!theme cyborg-outline
+hide empty members
+
+'skinparam backgroundColor #111
+skinparam titleFontColor #fff
+skinparam arrowColor #FB0
+skinparam packageBackgroundColor #222
+skinparam packageFontColor #f0f
+skinparam packageBorderColor #0BF
+skinparam rectangleBackgroundColor #011111
+skinparam rectangleFontColor #fff
+skinparam rectangleBorderColor #0BF
+skinparam frameBackgroundColor #011111
+skinparam nodeBackgroundColor #111
+skinparam nodeFontColor #fff
+skinparam nodeBorderColor #0BF
+skinparam interfaceBackgroundColor #111
+skinparam interfaceFontColor #FFF
+skinparam interfaceBorderColor #0F0
+skinparam componentStyle rectangle
+skinparam RoundCorner<<noRoundCorners>> 0
+hide package <<noRoundCorners>> stereotype
+hide rectangle <<noRoundCorners>> stereotype
+skinparam RoundCorner 25
+
+'title "__Multiplatform Chat Components__"
+
+rectangle {
+package "common" as common.common <<noRoundCorners>> {
+    component Chat <<noRoundCorners>>
+    component ChatClient <<noRoundCorners>>
+    [Chat] -> [ChatClient]
+}
+
+package desktop <<noRoundCorners>> {
+    component DesktopMain <<noRoundCorners>>
+    [DesktopMain] --> [Chat]
+}
+
+package android <<noRoundCorners>> {
+    component MainActivity <<noRoundCorners>>
+    [MainActivity] --> [Chat]
+}
+
+package web <<noRoundCorners>> {
+    component WebMain <<noRoundCorners>>
+    [WebMain] --> [Chat]
+}
+
+interface User
+
+User ...> android : uses
+User ...> desktop : uses
+
+cloud internet {
+  [ChatClient] <..> WebSocket : connect
+  User ...> WebSite : requests
+}
+
+
+package "server" <<noRoundCorners>> {
+    component Server <<noRoundCorners>>
+  WebSocket <..> [Server] : provide
+  WebSite <..> [Server] : serve
+  [Server] --> [WebMain]
+}
+
+database "sqLite" {
+    node Users
+    node Content
+    Users <- Content
+}
+
+[Server] -> sqLite
+
+'hide common
+'hide sqLite
+'hide web
+'hide android
+'hide desktop
+'hide internet
+'hide server
+'hide User
+}
+@enduml
