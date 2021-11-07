@@ -135,7 +135,7 @@ jobs:
         run: |
           mkdir .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
           copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
-          ls .\desktop\build\compose\binaries\main
+          dir .\desktop\build\compose\binaries\main
           copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
 
 

@@ -24,8 +24,10 @@ kotlin {
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
                 implementation("io.ktor:ktor-html-builder:$ktorVersion")
 
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.221-kotlin-1.5.21")
-                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
+                val kotlinCssVersion: String by project
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:$kotlinCssVersion")
+                val kotlinHtmlVersion: String by project
+                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinHtmlVersion")
 
                 val kotlinSerializationVersion: String by project
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
@@ -37,9 +39,11 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-                implementation("org.xerial:sqlite-jdbc:3.30.1")
+                val xerialSqliteVersion: String by project
+                implementation("org.xerial:sqlite-jdbc:$xerialSqliteVersion")
 
-                implementation("org.slf4j:slf4j-log4j12:1.7.32")
+                val slf4jVersion: String by project
+                implementation("org.slf4j:slf4j-log4j12:$slf4jVersion")
             }
         }
     }

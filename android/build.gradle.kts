@@ -54,6 +54,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime:$androidComposeVersion")
 
     implementation(compose.web.widgets)
+
     implementation("androidx.compose.ui:ui:1.0.5")
     implementation("androidx.compose.foundation:foundation:1.0.5")
     implementation("androidx.compose.material:material:1.0.5")
@@ -67,11 +68,13 @@ dependencies {
     implementation("org.slf4j:slf4j-log4j12:1.7.32")
 
     val ktorVersion: String by project
-    val kotlinCoroutinesVersion: String by project
-    val kotlinSerializationVersion: String by project
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
+
+    val kotlinCoroutinesVersion: String by project
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+
+    val kotlinSerializationVersion: String by project
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 }
 

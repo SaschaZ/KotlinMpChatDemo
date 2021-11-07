@@ -30,7 +30,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
-                implementation("org.slf4j:slf4j-log4j12:1.7.32")
+                val slf4jVersion: String by project
+                implementation("org.slf4j:slf4j-log4j12:$slf4jVersion")
             }
         }
     }

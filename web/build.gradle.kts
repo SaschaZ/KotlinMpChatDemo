@@ -4,11 +4,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-val ktorVersion: String by project
-val kotlinCoroutinesVersion: String by project
-val exposedVersion: String by project
-val kotlinSerializationVersion: String by project
-
 kotlin {
     js(IR) {
         binaries.executable()
@@ -22,12 +17,14 @@ kotlin {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
 
-                implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.7.2")
+                val ktorVersion: String by project
                 implementation("io.ktor:ktor-client-websockets:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.221-kotlin-1.5.21")
 
-                implementation("org.slf4j:slf4j-log4j12:1.7.32")
+                val kotlinSerializationVersion: String by project
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
+
+                val slf4jVersion: String by project
+                implementation("org.slf4j:slf4j-log4j12:$slf4jVersion")
             }
         }
     }
