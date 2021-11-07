@@ -133,11 +133,9 @@ jobs:
 
       - name: Prepare Release
         run: |
-          mkdir .\MpChatDemoWin\${{ steps.get_version.outputs.version }}
-          copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
-          ren .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\desktop-windows-x64-1.0.0.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
-          copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
-          ren .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\desktop_1.0.0-1_amd64.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
+          mkdir .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
+          copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
+          copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
 
 
   trigger-webserver:

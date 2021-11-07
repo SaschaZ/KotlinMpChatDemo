@@ -15,9 +15,6 @@ kotlin {
         compilations.all {
             kotlinOptions.jvmTarget = "15"
         }
-        testRuns["test"].executionTask.configure {
-            useJUnit()
-        }
         withJava()
     }
 
@@ -36,7 +33,6 @@ kotlin {
                 implementation("org.slf4j:slf4j-log4j12:1.7.32")
             }
         }
-        val jvmTest by getting
     }
 }
 

@@ -149,9 +149,13 @@ legend
 **Root**
 |_ <color:#0099FF>android</color>
   |_ build.gradle.kts
-|_ <color:#0099FF>**common**
+|_ <color:#0099FF>**common**</color>
+    |_ commonMain
+    |_ jvmMain
+    |_ jsMain
   |_ build.gradle.kts
 |_ <color:#0099FF>**desktop**</color>
+    |_ <color:orange>**jvmMain**</color>
   |_ <color:green>**build.gradle.kts**</color>
 |_ <color:#0099FF>**server**</color>
   |_ build.gradle.kts
