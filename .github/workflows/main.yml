@@ -246,40 +246,40 @@ jobs:
           scp_options: -vpr
 
 
-      build-readme:
-        runs-on: ubuntu-latest
-        needs: deploy
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v2
-            with:
-              ref: ${{ github.head_ref }}
+  build-readme:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
-          - name: Set output
-            id: vars
-            run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
-          - name: Check output
-            env:
-              RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-            run: |
-              echo ${{ env.RELEASE_VERSION }}
-              echo ${{ steps.vars.outputs.tag }}
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo ${{ env.RELEASE_VERSION }}
+          echo ${{ steps.vars.outputs.tag }}
 
-          - name: Build Readme
-            env:
-              RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-            run: ./buildReadme.sh ${{ env.RELEASE_VERSION }}
+      - name: Build Readme
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: ./buildReadme.sh ${{ env.RELEASE_VERSION }}
 
-          - name: Git Commit and Push README.md
-            uses: stefanzweifel/git-auto-commit-action@v4
-            env:
-              RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-            with:
-              commit_message: README.md for tag ${{ env.RELEASE_VERSION }}
-              branch: master
-              commit_user_name: Sascha Zieger
-              commit_user_email: saschazieger@gmail.com
-              commit_author: Author <saschazieger@gmail.com>
+      - name: Git Commit and Push README.md
+        uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        with:
+          commit_message: README.md for tag ${{ env.RELEASE_VERSION }}
+          branch: master
+          commit_user_name: Sascha Zieger
+          commit_user_email: saschazieger@gmail.com
+          commit_author: Author <saschazieger@gmail.com>
 
-      
+
