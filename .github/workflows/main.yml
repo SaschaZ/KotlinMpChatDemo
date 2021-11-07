@@ -121,6 +121,7 @@ jobs:
       - name: Get latest release version number
         id: get_version
         uses: battila7/get-version-action@v2
+        run: echo ${{ steps.get_version.outputs.version }}
 
       - name: Build with Gradle
         run: .\gradlew.bat packageDmg packageUberJarForCurrentOS
@@ -128,14 +129,14 @@ jobs:
       - name: Cache artifacts
         uses: actions/cache@v2
         with:
-          path: ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}
+          path: .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
           key: win-${{ steps.get_version.outputs.version }}
 
       - name: Prepare Release
         run: |
-          mkdir ./MpChatDemoWin/${{ steps.get_version.outputs.version }}
-          copy .\desktop\build\compose\jars\*.jar ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}/MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
-          copy .\desktop\build\compose\binaries\main\msi\*.msi ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}/MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
+          mkdir .\MpChatDemoWin\${{ steps.get_version.outputs.version }}
+          copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
+          copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
 
 
   trigger-webserver:
