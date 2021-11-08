@@ -5,7 +5,6 @@ plugins {
     kotlin("android")
     kotlin("plugin.serialization")
     id("org.jetbrains.compose")
-    id("kotlin-android")
 }
 
 inline fun <reified T> fromProps(name: String): T = project.properties[name].toString().let {
@@ -50,32 +49,30 @@ android {
 dependencies {
     implementation(project(":common"))
 
-    val androidComposeVersion: String by project
-    implementation("androidx.compose.runtime:runtime:$androidComposeVersion")
-
-    implementation(compose.web.widgets)
-
-    implementation("androidx.compose.ui:ui:1.0.5")
-    implementation("androidx.compose.foundation:foundation:1.0.5")
-    implementation("androidx.compose.material:material:1.0.5")
-    implementation("androidx.compose.material:material-icons-core:1.0.5")
-    implementation("androidx.compose.material:material-icons-extended:1.0.5")
-    implementation("androidx.activity:activity-compose:1.4.0")
+    val kotlinCoroutinesVersion: String by project
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+    val kotlinSerializationVersion: String by project
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
 
     val androidxAppCompatVersion: String by project
     implementation("androidx.appcompat:appcompat:$androidxAppCompatVersion")
-
-    implementation("org.slf4j:slf4j-log4j12:1.7.32")
 
     val ktorVersion: String by project
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
 
-    val kotlinCoroutinesVersion: String by project
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+    implementation(compose.runtime)
+    implementation(compose.web.widgets)
+    implementation(compose.ui)
+    implementation(compose.foundation)
+    implementation(compose.material)
+    implementation(compose.materialIconsExtended)
 
-    val kotlinSerializationVersion: String by project
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion")
+    val androidXActivityCompose: String by project
+    implementation("androidx.activity:activity-compose:$androidXActivityCompose")
+
+    val slf4jVersion: String by project
+    implementation("org.slf4j:slf4j-log4j12:$slf4jVersion")
 }
 
 

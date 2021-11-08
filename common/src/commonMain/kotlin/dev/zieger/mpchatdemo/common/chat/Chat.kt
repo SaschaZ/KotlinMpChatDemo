@@ -2,6 +2,7 @@ package dev.zieger.mpchatdemo.common.chat
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import dev.zieger.mpchatdemo.common.Link
 import dev.zieger.mpchatdemo.common.Table
 import dev.zieger.mpchatdemo.common.TextField
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
@@ -30,18 +31,19 @@ fun Chat(
 ) {
     // This model represents the UI of this composable.
     val model = remember { ChatModel() }
-    val errorState = mutableStateOf<String?>(null)
 
     // Create ChatClient instance and add every new message to the messages SnapShotStateList
     // of our model.
     val chat = remember {
-        ChatClient(host, path, port, errorState) { content -> model.messages.add(0, content) }
+        ChatClient(host, path, port, model.error) { content ->
+            model.messages.add(0, content)
+        }
     }
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(1f).background(Color.LightGray)) {
         // Switch the UI depending on the login/connecting state of the user.
         when {
-            errorState.value != null -> ShowError(errorState, model, useDarkButtonColor)
+            model.error.value != null -> ShowError(model.error, model, useDarkButtonColor)
             model.userName.value.isBlank() -> {
                 loggedOut(model, chat, useDarkButtonColor)
                 description()
@@ -165,7 +167,7 @@ fun description() {
         }
 
         Text(
-            "Available commands", color = Color.Black,
+            "Available commands:", color = Color.Black,
             modifier = Modifier.padding(8.dp)
         )
         Table(Modifier.padding(24.dp)) {
@@ -205,7 +207,7 @@ fun description() {
             }
         }
 
-        Text("\nAvailable Platforms", color = Color.Black, modifier = Modifier.padding(8.dp))
+        Text("\nAvailable Platforms:", color = Color.Black, modifier = Modifier.padding(8.dp))
         Table(Modifier.padding(24.dp)) {
             Tr {
                 Td {
@@ -240,18 +242,10 @@ fun description() {
                         )
                     }
                     Tr {
-                        Text(
-                            "Jar",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
-                        )
+                        Link("https://zieger.dev/files/MpChatDemo/", "Jar")
                     }
                     Tr {
-                        Text(
-                            "Jar",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
-                        )
+                        Link("https://zieger.dev/files/MpChatDemo/", "Jar")
                     }
                 }
                 Td {
@@ -263,18 +257,10 @@ fun description() {
                         )
                     }
                     Tr {
-                        Text(
-                            "Deb",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
-                        )
+                        Link("https://zieger.dev/files/MpChatDemo/", "Deb")
                     }
                     Tr {
-                        Text(
-                            "Dmi",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
-                        )
+                        Link("https://zieger.dev/files/MpChatDemo/", "Dmi")
                     }
                 }
             }
@@ -289,5 +275,5 @@ data class ChatModel(
     val userMessage: MutableState<String> = mutableStateOf(""),
     // all received messages off all users
     val messages: SnapshotStateList<ChatContent> = mutableStateListOf(),
-    val darkMode: MutableState<Boolean> = mutableStateOf(false)
+    val error: MutableState<String?> = mutableStateOf(null)
 )

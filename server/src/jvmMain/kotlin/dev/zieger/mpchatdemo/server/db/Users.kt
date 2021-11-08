@@ -7,7 +7,6 @@ import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -22,8 +21,7 @@ object Users : LongIdTable() {
         insert {
             it[name] = userName
             it[color] = colorArgb
-        }.let { ChatUser(it.resultedValues!!.first()) }
-            .also { u -> println("insert new user into DB: $u") }
+        }.let { get(userName)!! }.also { u -> println("insert new user into DB: $u") }
     }
 
     fun get(userName: String): ChatUser? = transaction {
@@ -40,9 +38,6 @@ object Users : LongIdTable() {
         }
     }.let { get(user.name) }
 }
-
-private operator fun ChatUser.Companion.invoke(result: ResultRow): ChatUser =
-    ChatUser(result[Users.id].value, result[Users.name], result[Users.color].toColor())
 
 /**
  * Represents a single entry of the Users table.

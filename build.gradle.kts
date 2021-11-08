@@ -5,11 +5,15 @@ buildscript {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
     dependencies {
         val kotlinVersion: String by project
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath(kotlin("serialization", version = kotlinVersion))
+
+        val composeVersion: String by project
+        classpath("org.jetbrains.compose:compose-gradle-plugin:$composeVersion")
 
         val androidGradlePluginVersion: String by project
         classpath("com.android.tools.build:gradle:$androidGradlePluginVersion")

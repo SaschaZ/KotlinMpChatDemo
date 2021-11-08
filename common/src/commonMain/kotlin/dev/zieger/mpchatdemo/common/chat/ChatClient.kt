@@ -1,6 +1,7 @@
 package dev.zieger.mpchatdemo.common.chat
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
@@ -13,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class ChatClient(
@@ -20,7 +22,7 @@ class ChatClient(
     private val path: String,
     private val port: Int,
     private val errorState: MutableState<String?>,
-    private val onNewContent: suspend (content: ChatContent) -> Unit
+    private val messageList: SnapshotStateList<ChatContent>
 ) {
 
     private val client = HttpClient {
@@ -37,7 +39,7 @@ class ChatClient(
         initializeClient(username) {
             onInitialized()
             scope.launch { sendAll(sendChannel) }
-            receiveAll(onNewContent)
+            receiveAll(messageList)
         }
     }
 
@@ -74,11 +76,11 @@ suspend fun DefaultClientWebSocketSession.sendAll(values: ReceiveChannel<String>
 
 private val json = Json { classDiscriminator = "#class" }
 
-suspend fun DefaultClientWebSocketSession.receiveAll(listener: suspend ChatContent.() -> Unit) {
+suspend fun DefaultClientWebSocketSession.receiveAll(messageList: SnapshotStateList<ChatContent>) {
     for (frame in incoming) {
         when (frame) {
             is Frame.Text -> frame.readText().ifBlank { null }?.also {
-                json.decodeFromString(ChatContent.serializer(), it).listener()
+                messageList.add(json.decodeFromString(it))
             }
             else -> Unit
         }

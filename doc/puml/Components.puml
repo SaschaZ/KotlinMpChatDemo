@@ -5,9 +5,9 @@ left to right direction
 '!theme cyborg-outline
 hide empty members
 
-'skinparam backgroundColor #111
+skinparam defaultFontColor #fff
 skinparam titleFontColor #fff
-skinparam arrowColor #FB0
+skinparam arrowColor #Fff
 skinparam packageBackgroundColor #222
 skinparam packageFontColor #f0f
 skinparam packageBorderColor #0BF
@@ -27,7 +27,7 @@ hide package <<noRoundCorners>> stereotype
 hide rectangle <<noRoundCorners>> stereotype
 skinparam RoundCorner 25
 
-'title "__Multiplatform Chat Components__"
+left to right direction
 
 rectangle {
 package "common" as common.common <<noRoundCorners>> {
@@ -38,35 +38,38 @@ package "common" as common.common <<noRoundCorners>> {
 
 package desktop <<noRoundCorners>> {
     component DesktopMain <<noRoundCorners>>
-    [DesktopMain] --> [Chat]
+    [DesktopMain] -[#yellow]-> [Chat]
 }
 
 package android <<noRoundCorners>> {
     component MainActivity <<noRoundCorners>>
-    [MainActivity] --> [Chat]
+    [MainActivity] -[#yellow]-> [Chat]
 }
 
 package web <<noRoundCorners>> {
     component WebMain <<noRoundCorners>>
-    [WebMain] --> [Chat]
+    [WebMain] -[#yellow]-> [Chat]
 }
 
 interface User
 
-User ...> android : uses
-User ...> desktop : uses
+User .[#green].> android : uses
+User .[#green].> desktop : uses
 
 cloud internet {
-  [ChatClient] <..> WebSocket : connect
-  User ...> WebSite : requests
+  [ChatClient] <.[#royalblue].> WebSocket : connect
+  User .[#green].> WebSite : requests
 }
 
 
 package "server" <<noRoundCorners>> {
     component Server <<noRoundCorners>>
-  WebSocket <..> [Server] : provide
-  WebSite <..> [Server] : serve
-  [Server] --> [WebMain]
+  WebSocket <.[#violet].> [Server] : provide
+  WebSite <.[#violet].> [Server] : serve
+  [Server] -[#red]-> [WebMain]
+  [ChatBot] <- [Server]
+  [Server] -> [DbBridge]
+  [Server] --> [EmoticonProvider]
 }
 
 database "sqLite" {
@@ -75,7 +78,7 @@ database "sqLite" {
     Users <- Content
 }
 
-[Server] -> sqLite
+[DbBridge] --> sqLite
 
 'hide common
 'hide sqLite

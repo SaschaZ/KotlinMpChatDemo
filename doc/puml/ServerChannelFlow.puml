@@ -1,44 +1,87 @@
 @startuml
 'https://plantuml.com/object-diagram
 
-!theme cyborg-outline
-skinparam backgroundColor #000
+skinparam defaultFontColor #fff
+skinparam titleFontColor #fff
+skinparam arrowColor #Fff
+skinparam packageBackgroundColor #222
+skinparam packageFontColor #f0f
+skinparam packageBorderColor #0BF
+skinparam objectBackgroundColor #222
+skinparam objectFontColor #f0f
+skinparam objectBorderColor #0BF
+skinparam classBackgroundColor #222
+skinparam classFontColor #f0f
+skinparam classBorderColor #0BF
+skinparam rectangleBackgroundColor #011111
+skinparam rectangleFontColor #fff
+skinparam rectangleBorderColor #0BF
+skinparam frameBackgroundColor #011111
+skinparam nodeBackgroundColor #111
+skinparam nodeFontColor #fff
+skinparam nodeBorderColor #0BF
+skinparam interfaceBackgroundColor #111
+skinparam interfaceFontColor #FFF
+skinparam interfaceBorderColor #0F0
+skinparam componentStyle rectangle
+skinparam circledCharacterFontColor black
+skinparam RoundCorner<<roundCorners>> 25
+hide rectangle <<roundCorners>> stereotype
 
-title "Channel and Flow usage"
+rectangle " " <<roundCorners>> {
 
-together {
-    Object Input <<Channel>> {
-        Receives messages\nsend by any client.
-    }
-    Object FinalFlow <<SharedFlow>> {
-        Contains the last X\npropagated messages.
-    }
-
-    object DbBridge {
-        Loads the last X messages\nfrom the DB and stores all\nreceived messages in the DB.
-    }
-    object ChatBot {
-        Parses all messages starting with ""/"":
-        - ""/color #000000"" -> changes color of user
-        - ""/me …"" -> indirect speech
-    }
-
-    Input "1" *-> "1" DbBridge
-    DbBridge "1" *-> "1" ChatBot
-    ChatBot "1" *-> "1" FinalFlow
-}
-
-together {
-    rectangle KTOR {
-        Object WebServiceInput <<ReceiveChannel>> {
-            Provides all messages send\nby the connected client.
+    together {
+        Object Input <<Channel>> {
+            Receives messages\nsend by any client.
         }
-        Object WebServiceOutput <<SendChannel>> {
-            Messages send to this ""Channel"" will\nbe forwarded to the connected client.
+        Object FinalFlow <<SharedFlow>> {
+            Contains the last X\npropagated messages.
         }
-    }
-    WebServiceInput "0..*\t" *--> "1" Input
-    FinalFlow "1\t" *--> "0..*" WebServiceOutput
-}
 
+        object DbBridge <<ChatMessagePipe>> {
+            Loads the last X messages\nfrom the DB and stores all\nreceived messages in the DB.
+        }
+        object ChatBot <<ChatMessagePipe>> {
+            Parses all messages starting with ""/"":
+            # ""/color #000000"" -> changes color of user
+            # ""/me …"" -> indirect speech
+        }
+        object Emoticons <<ChatMessagePipe>> {
+            Replace some common text emoticons\nwith their Unicode equivalent.
+        }
+
+        Input "1" -> "1" DbBridge
+        DbBridge "1" -> "1" ChatBot
+        ChatBot "1" -> "1" Emoticons
+        Emoticons "1" -> "1" FinalFlow
+    }
+
+    together {
+        rectangle KTOR {
+            Object WebServiceInput <<ReceiveChannel>> {
+                Provides all messages send\nby the connected client.
+            }
+            Object WebServiceOutput <<SendChannel>> {
+                Messages send to this ""Channel"" will\nbe forwarded to the connected client.
+            }
+        }
+        WebServiceInput "0..*\t" *--> "1" Input
+        FinalFlow "1\t" *--> "0..*" WebServiceOutput
+    }
+
+    class "**ChatMessagePipe**" as ChatMessagePipe<<(A,#00ff00)>> {
+        +constructor(
+            \tscope: CoroutineScope
+            +\tinput: ReceiveChannel<ChatContent>
+            \toutput: Channel<ChatContent>
+        )
+        ===
+        #output: SendChannel<ChatContent>
+        +onNewMessage(content: ChatContent)
+    }
+
+    KTOR -[hidden]r- ChatMessagePipe
+    interface "**ReceiveChannel**" as ReceiveChannel <<(I,#ffff00)>> <<ChatContent>>
+    ChatMessagePipe -|> ReceiveChannel
+}
 @enduml

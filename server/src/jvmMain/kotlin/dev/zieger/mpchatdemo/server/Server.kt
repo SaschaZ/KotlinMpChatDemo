@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.css.CSSBuilder
 import kotlinx.html.HTML
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.Duration
 import java.util.*
@@ -49,9 +50,14 @@ class Server(
                 val scope = CoroutineScope(Dispatchers.IO)
                 // This Channel will be used to send new ChatContent.
                 val firstStage = Channel<ChatContent>()
+                // store to and load from DB
                 val secondStage = DbMessageBridge(scope, firstStage)
+                // apply ChatBot
                 val thirdStage = ChatBot(scope, secondStage)
+                // replace emoticons
                 val finalStageChannel = Emoticons(scope, thirdStage)
+                // emit all values of the last Channel inside a new flow
+                // and make this Flow a SharedFlow
                 val finalStageFlow = flow { emitAll(finalStageChannel) }
                     .shareIn(scope, SharingStarted.Eagerly, 128)
 
@@ -96,7 +102,7 @@ class Server(
             // Collect all messages and send them to the connected user
             val sendJob = scope.launch {
                 messages.collect {
-                    send(json.encodeToString(ChatContent.serializer(), it))
+                    send(json.encodeToString(it))
                 }
             }
 

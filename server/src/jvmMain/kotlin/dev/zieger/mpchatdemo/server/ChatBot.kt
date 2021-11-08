@@ -27,7 +27,7 @@ class ChatBot(
         println("on new command: $content")
 
         handleColorChange(content)
-            ?: handleMe(content)
+            ?: handleIndirectSpeech(content)
             ?: run {
                 output.sendNotification(
                     content.user,
@@ -58,7 +58,7 @@ class ChatBot(
             }
         }
 
-    private suspend fun handleMe(
+    private suspend fun handleIndirectSpeech(
         c: ChatContent
     ): Any? = """/me (.*)""".toRegex().find(c.content)?.groupValues?.getOrNull(1)?.also { msg ->
         println("/me $msg")
