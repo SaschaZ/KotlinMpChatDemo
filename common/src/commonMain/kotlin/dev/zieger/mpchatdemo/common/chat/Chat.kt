@@ -232,10 +232,9 @@ fun description() {
                 val tag = remember { }
                 Td {
                     Tr {
-                        Text(
-                            "Apk",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-android-$currentTag.apk",
+                            "Apk"
                         )
                     }
                     Tr {
