@@ -228,6 +228,13 @@ fun description() {
                             color = Color.Black
                         )
                     }
+                    Tr {
+                        Text(
+                            "Win",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
                 }
                 val tag = remember { }
                 Td {
@@ -249,6 +256,12 @@ fun description() {
                             "Jar"
                         )
                     }
+                    Tr {
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-windows-jvm-$currentTag.jar",
+                            "Jar"
+                        )
+                    }
                 }
                 Td {
                     Tr {
@@ -266,8 +279,14 @@ fun description() {
                     }
                     Tr {
                         Link(
-                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-native-$currentTag.dmg",
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-native-$currentTag.dmi",
                             "Dmi"
+                        )
+                    }
+                    Tr {
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-windows-native-$currentTag.msi",
+                            "Msi"
                         )
                     }
                 }
