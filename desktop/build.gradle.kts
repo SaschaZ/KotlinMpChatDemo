@@ -42,7 +42,8 @@ compose.desktop {
         mainClass = "dev.zieger.mpchatdemo.desktop.DesktopMainKt"
 
         nativeDistributions {
-            packageVersion = "1.0.0"
+            description = "KotlinMpChatDemo"
+            packageVersion = "1.0.39"
             targetFormats(Dmg, Msi, Deb)
         }
     }

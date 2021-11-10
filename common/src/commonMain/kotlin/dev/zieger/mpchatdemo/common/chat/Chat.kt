@@ -6,6 +6,7 @@ import dev.zieger.mpchatdemo.common.Link
 import dev.zieger.mpchatdemo.common.Table
 import dev.zieger.mpchatdemo.common.TextField
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
+import dev.zieger.mpchatdemo.common.currentTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.core.graphics.Color
@@ -24,7 +25,6 @@ import org.jetbrains.compose.common.ui.unit.sp
 fun Chat(
     host: String = "chat.zieger.dev",
     port: Int = 443,
-    path: String = "/",
     fontSize: Int = 25,
     timeFontSize: Int = 15,
     useDarkButtonColor: Boolean = false
@@ -35,9 +35,7 @@ fun Chat(
     // Create ChatClient instance and add every new message to the messages SnapShotStateList
     // of our model.
     val chat = remember {
-        ChatClient(host, path, port, model.error) { content ->
-            model.messages.add(0, content)
-        }
+        ChatClient(host, port, model.error, model.messages)
     }
 
     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(1f).background(Color.LightGray)) {
@@ -76,11 +74,9 @@ fun loggedOut(
     useDarkButtonColor: Boolean
 ) = Row {
     val scope = rememberCoroutineScope { Dispatchers.Default }
-    val userName = remember { mutableStateOf("") }
 
     fun login() {
         model.isConnecting.value = true
-        model.userName.value = userName.value
         scope.launch {
             chat.startSocket(model.userName.value) {
                 model.isConnecting.value = false
@@ -90,9 +86,9 @@ fun loggedOut(
 
     var focusRequester: () -> Unit = {}
     TextField(
-        userName,
+        model.userName,
         onValueChange = {
-            userName.value = it.filterNot { c -> c.isWhitespace() }
+            model.userName.value = it.filterNot { c -> c.isWhitespace() }
                 .ifBlank { null }?.take(32) ?: ""
         },
         maxLines = 1,
@@ -233,6 +229,7 @@ fun description() {
                         )
                     }
                 }
+                val tag = remember { }
                 Td {
                     Tr {
                         Text(
@@ -242,10 +239,16 @@ fun description() {
                         )
                     }
                     Tr {
-                        Link("https://zieger.dev/files/MpChatDemo/", "Jar")
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-linux-jvm-$currentTag.jar",
+                            "Jar"
+                        )
                     }
                     Tr {
-                        Link("https://zieger.dev/files/MpChatDemo/", "Jar")
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-jvm-$currentTag.jar",
+                            "Jar"
+                        )
                     }
                 }
                 Td {
@@ -257,10 +260,16 @@ fun description() {
                         )
                     }
                     Tr {
-                        Link("https://zieger.dev/files/MpChatDemo/", "Deb")
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-linux-native-$currentTag.deb",
+                            "Deb"
+                        )
                     }
                     Tr {
-                        Link("https://zieger.dev/files/MpChatDemo/", "Dmi")
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-native-$currentTag.dmg",
+                            "Dmi"
+                        )
                     }
                 }
             }

@@ -18,14 +18,14 @@ jobs:
           java-version: 15
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2 
-
-      - name: Build with Gradle
-        run: ./assembleApk.sh ${{secrets.ANDROID_KEY_PASSWORD}}
+        uses: android-actions/setup-android@v2
 
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Build with Gradle
+        run: ./applyTag.sh ${{ steps.vars.outputs.tag }} && ./assembleApk.sh ${{secrets.ANDROID_KEY_PASSWORD}}
 
       - name: Cache artifacts
         uses: actions/cache@v2
@@ -52,12 +52,12 @@ jobs:
         with:
           java-version: 15
 
-      - name: Build with Gradle
-        run: ./gradlew packageDeb packageUberJarForCurrentOS
-
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Build with Gradle
+        run: ./applyTag.sh ${{ steps.vars.outputs.tag }} && ./gradlew packageDeb packageUberJarForCurrentOS
 
       - name: Cache artifacts
         uses: actions/cache@v2

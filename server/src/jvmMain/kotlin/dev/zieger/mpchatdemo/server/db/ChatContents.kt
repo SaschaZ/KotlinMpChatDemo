@@ -1,5 +1,6 @@
 package dev.zieger.mpchatdemo.server.db
 
+import dev.zieger.mpchatdemo.common.Constants.SHARED_FLOW_REPEAT
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContentType
 import org.jetbrains.exposed.dao.LongEntity
@@ -37,7 +38,7 @@ object ChatContents : LongIdTable() {
             .orderBy(key to SortOrder.ASC)
             .map { it.chatContent }
             .toList()
-            .takeLast(128)
+            .takeLast(SHARED_FLOW_REPEAT)
     }
 }
 

@@ -28,7 +28,7 @@ skinparam circledCharacterFontColor black
 skinparam RoundCorner<<roundCorners>> 25
 hide rectangle <<roundCorners>> stereotype
 
-rectangle " " <<roundCorners>> {
+rectangle "\n<size:30>Message Pipeline" <<roundCorners>> {
 
     together {
         Object Input <<Channel>> {

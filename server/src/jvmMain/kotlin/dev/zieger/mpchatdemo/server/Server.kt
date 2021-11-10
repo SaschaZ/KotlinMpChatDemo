@@ -1,5 +1,7 @@
 package dev.zieger.mpchatdemo.server
 
+import dev.zieger.mpchatdemo.common.Constants.SHARED_FLOW_REPEAT
+import dev.zieger.mpchatdemo.common.Constants.WEB_SOCKET_PING_INTERVAL
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
 import dev.zieger.mpchatdemo.server.db.DbMessageBridge
 import dev.zieger.mpchatdemo.server.db.Users
@@ -44,7 +46,7 @@ class Server(
 
             module {
                 install(WebSockets) {
-                    pingPeriod = Duration.ofSeconds(60)
+                    pingPeriod = Duration.ofSeconds(WEB_SOCKET_PING_INTERVAL.toLong())
                 }
 
                 val scope = CoroutineScope(Dispatchers.IO)
@@ -59,7 +61,7 @@ class Server(
                 // emit all values of the last Channel inside a new flow
                 // and make this Flow a SharedFlow
                 val finalStageFlow = flow { emitAll(finalStageChannel) }
-                    .shareIn(scope, SharingStarted.Eagerly, 128)
+                    .shareIn(scope, SharingStarted.Eagerly, SHARED_FLOW_REPEAT)
 
                 // The routing block is invoked for all received http requests.
                 routing {

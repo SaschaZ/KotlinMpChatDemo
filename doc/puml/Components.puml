@@ -22,71 +22,82 @@ skinparam interfaceBackgroundColor #111
 skinparam interfaceFontColor #FFF
 skinparam interfaceBorderColor #0F0
 skinparam componentStyle rectangle
-skinparam RoundCorner<<noRoundCorners>> 0
-hide package <<noRoundCorners>> stereotype
-hide rectangle <<noRoundCorners>> stereotype
-skinparam RoundCorner 25
+skinparam RoundCorner<<roundCorners>> 25
+hide rectangle <<roundCorners>> stereotype
 
 left to right direction
 
-rectangle {
-package "common" as common.common <<noRoundCorners>> {
-    component Chat <<noRoundCorners>>
-    component ChatClient <<noRoundCorners>>
-    [Chat] -> [ChatClient]
-}
+rectangle "\n<size:40>**Components**￼" <<roundCorners>> {
 
-package desktop <<noRoundCorners>> {
-    component DesktopMain <<noRoundCorners>>
-    [DesktopMain] -[#yellow]-> [Chat]
-}
+    interface User
 
-package android <<noRoundCorners>> {
-    component MainActivity <<noRoundCorners>>
-    [MainActivity] -[#yellow]-> [Chat]
-}
+    User .[#green].> android : uses
+    User .[#green].> desktop : uses
 
-package web <<noRoundCorners>> {
-    component WebMain <<noRoundCorners>>
-    [WebMain] -[#yellow]-> [Chat]
-}
+    together {
+        package common {
+            component Chat
+            component ChatClient
+            [Chat] -> [ChatClient]
+            [Chat] --> [TextField]
+            [Chat] --> [Link]
+            [Chat] --> [Table]
+        }
 
-interface User
+        together {
+            package server {
+                component Server
+              [EmoticonProvider] <- [Server]
+              [Server] --> [DbBridge]
+              [Server] --> [ChatBot]
+            }
 
-User .[#green].> android : uses
-User .[#green].> desktop : uses
+            database sqLite {
+                node Users
+                node Content
+                Users <- Content
+            }
 
-cloud internet {
-  [ChatClient] <.[#royalblue].> WebSocket : connect
-  User .[#green].> WebSite : requests
-}
+            server -[hidden]- sqLite
+        }
+    }
 
+    together {
+        cloud internet {
+          [ChatClient] <.[#royalblue].> WebSocket : connect
+          User .[#green].> WebSite : requests
+        }
+        WebSocket <.[#violet].> [Server] : provide
+        WebSite <.[#violet].> [Server] : serve
 
-package "server" <<noRoundCorners>> {
-    component Server <<noRoundCorners>>
-  WebSocket <.[#violet].> [Server] : provide
-  WebSite <.[#violet].> [Server] : serve
-  [Server] -[#red]-> [WebMain]
-  [ChatBot] <- [Server]
-  [Server] -> [DbBridge]
-  [Server] --> [EmoticonProvider]
-}
+        package desktop {
+            component DesktopMain
+            [DesktopMain] -[#yellow]-> [Chat]
+        }
 
-database "sqLite" {
-    node Users
-    node Content
-    Users <- Content
-}
+        package android {
+            component MainActivity
+            [MainActivity] -[#yellow]-> [Chat]
+        }
 
-[DbBridge] --> sqLite
-
-'hide common
-'hide sqLite
-'hide web
-'hide android
-'hide desktop
-'hide internet
-'hide server
-'hide User
+        package web {
+            component WebMain
+            [WebMain] -[#yellow]-> [Chat]
+        }
+    }
+   [Server] -[#red]-> [WebMain]
+    
+    
+    [DbBridge] --> sqLite
+    [ChatBot] --> sqLite
+    
+    'hide common
+    'hide sqLite
+    'hide web
+    'hide android
+    'hide desktop
+    'hide internet
+    'hide server
+    'hide User
 }
 @enduml

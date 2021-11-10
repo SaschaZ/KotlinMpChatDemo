@@ -19,7 +19,7 @@ skinparam roundCorner<<roundCorner>> 25
 skinparam rectangleBackgroundColor #011111
 skinparam rectangleBorderColor #0af
 
-rectangle "" <<roundCorner>> {
+rectangle "\n<size:40><color:white> **Deployment**" <<roundCorner>> {
     start
     :new tag was pushed;
     if (tag matches pattern '""v[0-9]+\.[0-9]+\.[0-9]+""') then (true)
@@ -55,7 +55,7 @@ rectangle "" <<roundCorner>> {
 
             split again
                 partition Ubuntu {
-                    :server pul;
+                    :server pull;
                     :server rebuild;
                     :server restart;
                 }

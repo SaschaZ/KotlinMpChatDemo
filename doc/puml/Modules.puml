@@ -278,6 +278,336 @@ end legend
 
 newpage
 legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ Link.kt
+        |_ Table.kt
+        |_ <color:yellow>**TextField.kt**</color>
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ Table.kt
+          |_ <color:magenta>**TextField.kt**</color>
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ Table.kt
+          |_ <color:magenta>**TextField.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ Link.kt
+        |_ Table.kt
+        |_ <color:magenta>**TextField.kt**</color>
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ Table.kt
+          |_ <color:yellow>**TextField.kt**</color>
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ Table.kt
+          |_ <color:magenta>**TextField.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ Link.kt
+        |_ Table.kt
+        |_ <color:magenta>**TextField.kt**</color>
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ Table.kt
+          |_ <color:magenta>**TextField.kt**</color>
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ Table.kt
+          |_ <color:yellow>**TextField.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ <color:yellow>**Link.kt**</color>
+        |_ Table.kt
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**Link.kt**</color>
+          |_ Table.kt
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**Link.kt**</color>
+          |_ Table.kt
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ <color:magenta>**Link.kt**</color>
+        |_ Table.kt
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**Link.kt**</color>
+          |_ Table.kt
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**Link.kt**</color>
+          |_ Table.kt
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+        |_ <color:magenta>**Link.kt**</color>
+        |_ Table.kt
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**Link.kt**</color>
+          |_ Table.kt
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**Link.kt**</color>
+          |_ Table.kt
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+          |_ Link.kt
+          |_ <color:yellow>**Table.kt**</color>
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ <color:magenta>**Table.kt**</color>
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ <color:magenta>**Table.kt**</color>
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+          |_ Link.kt
+          |_ <color:magenta>**Table.kt**</color>
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ <color:yellow>**Table.kt**</color>
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ <color:magenta>**Table.kt**</color>
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+|_ <color:#0099FF>common</color>
+  |_ src
+    |_ <color:orange>commonMain</color>
+      |_ kotlin
+        |_ package
+          |_ Chat.kt
+          |_ ChatClient.kt
+        |_ Constants.kt
+          |_ Link.kt
+          |_ <color:magenta>**Table.kt**</color>
+        |_ TextField.kt
+    |_ <color:orange>jsMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ <color:magenta>**Table.kt**</color>
+          |_ TextField.kt
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ Link.kt
+          |_ <color:yellow>**Table.kt**</color>
+          |_ TextField.kt
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**MainActivity.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>desktop</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**DesktopMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>web</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**WebMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**MainActivity.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>desktop</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**DesktopMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>web</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**WebMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
+**Root**
+|_ <color:#0099FF>android</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**MainActivity.kt**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>desktop</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:magenta>**DesktopMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+|_ <color:#0099FF>web</color>
+  |_ src
+    |_ <color:orange>jvmMain</color>
+      |_ kotlin
+        |_ package
+          |_ <color:yellow>**WebMain.kts**</color>
+  |_ <color:green>build.gradle.kts</color>
+end legend
+
+newpage
+legend
 **Root**
 |_ <color:#0099FF>android</color>
   |_ src
@@ -294,16 +624,19 @@ legend
           |_ <color:magenta>**Chat.kts**</color>
           |_ ChatClient.kt
         |_ Constants.kt
+        |_ Link.kt
         |_ Table.kt
         |_ TextField.kt
     |_ <color:orange>jsMain</color>
       |_ kotlin
         |_ package
+          |_ Link.kt
           |_ Table.kt
           |_ TextField.kt
     |_ <color:orange>jvmMain</color>
       |_ kotlin
         |_ package
+          |_ Link.kt
           |_ Table.kt
           |_ TextField.kt
   |_ <color:green>build.gradle.kts</color>
@@ -319,6 +652,16 @@ legend
     |_ <color:orange>jvmMain</color>
       |_ kotlin
         |_ package
+          |_ db
+            |_ ChatContents.kt
+            |_ Db.kt
+            |_ DbMessageBridge.kt
+            |_ Users.kt
+          |_ ChatBot.kt
+          |_ ChatMessagePipe.kt
+          |_ Emoticons.kt
+          |_ HtmlFactory.kt
+          |_ Server.kt
           |_ <color:yellow>**ServerMain.kts**</color>
   |_ <color:green>build.gradle.kts</color>
 |_ <color:#0099FF>web</color>
