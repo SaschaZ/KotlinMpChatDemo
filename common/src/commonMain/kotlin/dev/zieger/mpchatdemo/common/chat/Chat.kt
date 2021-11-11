@@ -74,9 +74,11 @@ fun loggedOut(
     useDarkButtonColor: Boolean
 ) = Row {
     val scope = rememberCoroutineScope { Dispatchers.Default }
+    val userName = remember { mutableStateOf("") }
 
     fun login() {
         model.isConnecting.value = true
+        model.userName.value = userName.value
         scope.launch {
             chat.startSocket(model.userName.value) {
                 model.isConnecting.value = false
@@ -86,9 +88,9 @@ fun loggedOut(
 
     var focusRequester: () -> Unit = {}
     TextField(
-        model.userName,
+        userName,
         onValueChange = {
-            model.userName.value = it.filterNot { c -> c.isWhitespace() }
+            userName.value = it.filterNot { c -> c.isWhitespace() }
                 .ifBlank { null }?.take(32) ?: ""
         },
         maxLines = 1,
@@ -118,19 +120,20 @@ fun LoggedIn(
     useDarkButtonColor: Boolean
 ) {
     var focusRequester: () -> Unit = {}
+    val message = remember { mutableStateOf("") }
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         fun send() {
-            chat.sendMessage(model.userMessage.value)
-            model.userMessage.value = ""
+            chat.sendMessage(message.value)
+            message.value = ""
         }
 
         TextField(
-            model.userMessage,
+            message,
             onValueChange = {
-                model.userMessage.value = it
+                message.value = it
             },
             onSubmit = { send() },
             label = { Text("Message: ") },
