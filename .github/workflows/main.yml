@@ -30,7 +30,7 @@ jobs:
       - name: Cache artifacts
         uses: actions/cache@v2
         with:
-          path: ./MpChatDemoAndroid/MpChatDemo/${{ steps.vars.outputs.tag
+          path: ./MpChatDemoAndroid/MpChatDemo/${{ steps.vars.outputs.tag }}
           key: android-${{ steps.vars.outputs.tag }}
 
       - name: Prepare Release
