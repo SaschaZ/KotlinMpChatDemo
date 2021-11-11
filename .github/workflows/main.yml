@@ -18,29 +18,25 @@ jobs:
           java-version: 15
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2 
-
-      - name: Build with Gradle
-        run: ./assembleApk.sh ${{secrets.ANDROID_KEY_PASSWORD}}
+        uses: android-actions/setup-android@v2
 
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
+      - name: Build with Gradle
+        run: ./applyTag.sh ${{ steps.vars.outputs.tag }} && ./assembleApk.sh ${{secrets.ANDROID_KEY_PASSWORD}}
+
       - name: Cache artifacts
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          path: ./MpChatDemoAndroid/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: android-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoAndroid/MpChatDemo/${{ steps.vars.outputs.tag }}
+          key: android-${{ steps.vars.outputs.tag }}
 
       - name: Prepare Release
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          mkdir -p ./MpChatDemoAndroid/MpChatDemo/${{ env.RELEASE_VERSION }}
-          cp ./MpChatAndroidDemo.apk ./MpChatDemoAndroid/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-android-${{ env.RELEASE_VERSION }}.apk
+          mkdir -p ./MpChatDemoAndroid/MpChatDemo/${{ steps.vars.outputs.tag }}
+          cp ./MpChatAndroidDemo.apk ./MpChatDemoAndroid/MpChatDemo/${{ steps.vars.outputs.tag }}/MpChatDemo-android-${{ steps.vars.outputs.tag }}.apk
 
 
   build-linux:
@@ -52,28 +48,24 @@ jobs:
         with:
           java-version: 15
 
-      - name: Build with Gradle
-        run: ./gradlew packageDeb packageUberJarForCurrentOS
-
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
+      - name: Build with Gradle
+        run: ./applyTag.sh ${{ steps.vars.outputs.tag }} && ./gradlew packageDeb packageUberJarForCurrentOS
+
       - name: Cache artifacts
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          path: ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: linux-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoLinux/MpChatDemo/${{ steps.vars.outputs.tag }}
+          key: linux-${{ steps.vars.outputs.tag }}
 
       - name: Prepare Release
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          mkdir -p ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
-          cp ./desktop/build/compose/jars/*.jar ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-jvm-${{ env.RELEASE_VERSION }}.jar
-          cp ./desktop/build/compose/binaries/main/deb/*.deb ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-linux-native-${{ env.RELEASE_VERSION }}.deb
+          mkdir -p ./MpChatDemoLinux/MpChatDemo/${{ steps.vars.outputs.tag }}
+          cp ./desktop/build/compose/jars/*.jar ./MpChatDemoLinux/MpChatDemo/${{ steps.vars.outputs.tag }}/MpChatDemo-linux-jvm-${{ steps.vars.outputs.tag }}.jar
+          cp ./desktop/build/compose/binaries/main/deb/*.deb ./MpChatDemoLinux/MpChatDemo/${{ steps.vars.outputs.tag }}/MpChatDemo-linux-native-${{ steps.vars.outputs.tag }}.deb
 
 
   build-mac:
@@ -94,48 +86,45 @@ jobs:
 
       - name: Cache artifacts
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          path: ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: mac-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoMac/MpChatDemo/${{ steps.vars.outputs.tag }}
+          key: mac-${{ steps.vars.outputs.tag }}
 
       - name: Prepare Release
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          mkdir -p ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
-          cp ./desktop/build/compose/jars/*.jar ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-jvm-${{ env.RELEASE_VERSION }}.jar
-          cp ./desktop/build/compose/binaries/main/dmg/*.dmg ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}/MpChatDemo-mac-native-${{ env.RELEASE_VERSION }}.dmg
+          mkdir -p ./MpChatDemoMac/MpChatDemo/${{ steps.vars.outputs.tag }}
+          cp ./desktop/build/compose/jars/*.jar ./MpChatDemoMac/MpChatDemo/${{ steps.vars.outputs.tag }}/MpChatDemo-mac-jvm-${{ steps.vars.outputs.tag }}.jar
+          cp ./desktop/build/compose/binaries/main/dmg/*.dmg ./MpChatDemoMac/MpChatDemo/${{ steps.vars.outputs.tag }}/MpChatDemo-mac-native-${{ steps.vars.outputs.tag }}.dmg
 
 
-  #  build-win:
-  #    runs-on: windows-latest
-  #    steps:
-  #      - uses: actions/checkout@v2
-  #
-  #      - uses: actions/setup-java@v1
-  #        with:
-  #          java-version: 15
-  #
-  #      - name: Get latest release version number
-  #        id: get_version
-  #        uses: battila7/get-version-action@v2
-  #
-  #      - name: Build with Gradle
-  #        run: .\gradlew.bat packageMsi packageUberJarForCurrentOS
-  #
-  #      - name: Cache artifacts
-  #        uses: actions/cache@v2
-  #        with:
-  #          path: ./MpChatDemoWin/MpChatDemo/${{ steps.get_version.outputs.version }}
-  #          key: win-${{ steps.get_version.outputs.version }}
-  #
-  #      - name: Prepare Release
-  #        run: |
-  #          mkdir .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
-  #          copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
-  #          copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
+  build-win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 15
+
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Build with Gradle
+        run: .\gradlew.bat packageMsi packageUberJarForCurrentOS
+
+      - name: Prepare Release
+        run: |
+          mkdir .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
+          copy .\desktop\build\compose\jars\*.jar .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-jvm-${{ steps.get_version.outputs.version }}.jar
+          copy .\desktop\build\compose\binaries\main\msi\*.msi .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}\MpChatDemo-windows-native-${{ steps.get_version.outputs.version }}.msi
+
+      - name: Upload win artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows${{ steps.get_version.outputs.version }}
+          path: .\MpChatDemoWin\MpChatDemo\${{ steps.get_version.outputs.version }}
+          retention-days: 1
 
 
   trigger-webserver:
@@ -153,7 +142,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [ build-android, build-linux, build-mac ]
+    needs: [ build-android, build-linux, build-mac, build-win ]
     steps:
       - uses: actions/checkout@v2
 
@@ -162,43 +151,33 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo ${{ env.RELEASE_VERSION }}
+          echo ${{ steps.vars.outputs.tag }}
           echo ${{ steps.vars.outputs.tag }}        
 
       - name: Cache Android artifact
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          path: ./MpChatDemoAndroid/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: android-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoAndroid/MpChatDemo/${{ steps.vars.outputs.tag }}
+          key: android-${{ steps.vars.outputs.tag }}
 
       - name: Cache Linux artifacts
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          path: ./MpChatDemoLinux/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: linux-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoLinux/MpChatDemo/${{ steps.vars.outputs.tag }}
+          key: linux-${{ steps.vars.outputs.tag }}
 
       - name: Cache Mac artifacts
         uses: actions/cache@v2
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          path: ./MpChatDemoMac/MpChatDemo/${{ env.RELEASE_VERSION }}
-          key: mac-${{ env.RELEASE_VERSION }}
+          path: ./MpChatDemoMac/MpChatDemo/${{ steps.vars.outputs.tag }}
+          key: mac-${{ steps.vars.outputs.tag }}
 
-      #      - name: Cache Win artifacts
-      #        uses: actions/cache@v2
-      #        env:
-      #          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-      #        with:
-      #          path: ./MpChatDemoWin/MpChatDemo/${{ env.RELEASE_VERSION }}
-      #          key: win-${{ env.RELEASE_VERSION }}
+      - name: Download win artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: windows${{  steps.vars.outputs.tag }}
+          path: ./MpChatDemoWin/MpChatDemo/${{  steps.vars.outputs.tag }}
 
       - name: SSH Server Deploy Android artifacts
         uses: mdallasanta/ssh-scp-deploy@v1.1.0
@@ -233,16 +212,16 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           scp_options: -vpr
 
-  #      - name: SSH Server Deploy Win artifacts
-  #        uses: mdallasanta/ssh-scp-deploy@v1.1.0
-  #        with:
-  #          local: './MpChatDemoWin/MpChatDemo'
-  #          remote: '~/files'
-  #          host: ${{secrets.SSH_HOST}}
-  #          port: ${{secrets.SSH_PORT}}
-  #          user: ${{secrets.SSH_USER}}
-  #          key: ${{secrets.SSH_KEY}}
-  #          scp_options: -vpr
+      - name: SSH Server Deploy Win artifacts
+        uses: mdallasanta/ssh-scp-deploy@v1.1.0
+        with:
+          local: './MpChatDemoWin/MpChatDemo'
+          remote: '~/files'
+          host: ${{secrets.SSH_HOST}}
+          port: ${{secrets.SSH_PORT}}
+          user: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
+          scp_options: -vpr
 
 
   build-readme:
@@ -259,23 +238,17 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo ${{ env.RELEASE_VERSION }}
+          echo ${{ steps.vars.outputs.tag }}
           echo ${{ steps.vars.outputs.tag }}
 
       - name: Build Readme
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-        run: ./buildReadme.sh ${{ env.RELEASE_VERSION }}
+        run: ./buildReadme.sh ${{ steps.vars.outputs.tag }}
 
       - name: Git Commit and Push README.md
         uses: stefanzweifel/git-auto-commit-action@v4
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         with:
-          commit_message: README.md for tag ${{ env.RELEASE_VERSION }}
+          commit_message: README.md for tag ${{ steps.vars.outputs.tag }}
           branch: master
           commit_user_name: Sascha Zieger
           commit_user_email: saschazieger@gmail.com

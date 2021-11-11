@@ -2,9 +2,11 @@ package dev.zieger.mpchatdemo.common.chat
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import dev.zieger.mpchatdemo.common.Link
 import dev.zieger.mpchatdemo.common.Table
 import dev.zieger.mpchatdemo.common.TextField
 import dev.zieger.mpchatdemo.common.chat.dto.ChatContent
+import dev.zieger.mpchatdemo.common.currentTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.common.core.graphics.Color
@@ -230,27 +232,38 @@ fun description() {
                             color = Color.Black
                         )
                     }
+                    Tr {
+                        Text(
+                            "Win",
+                            Modifier.padding(8.dp),
+                            color = Color.Black
+                        )
+                    }
                 }
+                val tag = remember { }
                 Td {
                     Tr {
-                        Text(
-                            "Apk",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-android-$currentTag.apk",
+                            "Apk"
                         )
                     }
                     Tr {
-                        Text(
-                            "Jar",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-linux-jvm-$currentTag.jar",
+                            "Jar"
                         )
                     }
                     Tr {
-                        Text(
-                            "Jar",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-jvm-$currentTag.jar",
+                            "Jar"
+                        )
+                    }
+                    Tr {
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-windows-jvm-$currentTag.jar",
+                            "Jar"
                         )
                     }
                 }
@@ -263,17 +276,21 @@ fun description() {
                         )
                     }
                     Tr {
-                        Text(
-                            "Deb",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-linux-native-$currentTag.deb",
+                            "Deb"
                         )
                     }
                     Tr {
-                        Text(
-                            "Dmi",
-                            Modifier.padding(8.dp),
-                            color = Color.Black
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-native-$currentTag.dmi",
+                            "Dmi"
+                        )
+                    }
+                    Tr {
+                        Link(
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-windows-native-$currentTag.msi",
+                            "Msi"
                         )
                     }
                 }
