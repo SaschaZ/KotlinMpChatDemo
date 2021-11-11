@@ -13,3 +13,10 @@ or browse for recent releases [here](https://zieger.dev/files/MpChatDemo).
 
 ---
 
+Presentation
+Slides: [PPTX](https://github.com/SaschaZ/KotlinMpChatDemo/blob/master/doc/slides/Kotlin MP
+ChatDemo.pptx) - [ODP](https://github.com/SaschaZ/KotlinMpChatDemo/blob/master/doc/slides/Kotlin MP
+ChatDemo.odp)
+
+- [Web](https://docs.google.com/presentation/d/1gQnfas9ADvM1bQEhoZYNzt2ArxtwSBHcvZ5mA4cyGAw/edit?usp=sharing)
+
