@@ -14,7 +14,7 @@ or browse for recent releases [here](https://zieger.dev/files/MpChatDemo).
 ---
 
 Presentation Slides: 
-[PPTX](https://github.com/SaschaZ/KotlinMpChatDemo/blob/master/doc/slides/Kotlin%20MP%20ChatDemo.pptx) 
+- [PPTX](https://github.com/SaschaZ/KotlinMpChatDemo/blob/master/doc/slides/Kotlin%20MP%20ChatDemo.pptx)
 - [ODP](https://github.com/SaschaZ/KotlinMpChatDemo/blob/master/doc/slides/Kotlin%20MP%20ChatDemo.odp)
 - [Web](https://docs.google.com/presentation/d/1gQnfas9ADvM1bQEhoZYNzt2ArxtwSBHcvZ5mA4cyGAw/edit?usp=sharing)
 
