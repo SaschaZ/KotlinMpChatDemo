@@ -78,7 +78,7 @@ suspend fun DefaultClientWebSocketSession.receiveAll(messageList: SnapshotStateL
     for (frame in incoming) {
         when (frame) {
             is Frame.Text -> frame.readText().ifBlank { null }?.also {
-                messageList.add(Json.decodeFromString(it))
+                messageList.add(0, Json.decodeFromString(it))
             }
             else -> Unit
         }
