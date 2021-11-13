@@ -282,8 +282,8 @@ fun description() {
                     }
                     Tr {
                         Link(
-                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-native-$currentTag.dmi",
-                            "Dmi"
+                            "https://zieger.dev/files/MpChatDemo/$currentTag/MpChatDemo-mac-native-$currentTag.dmg",
+                            "Dmg"
                         )
                     }
                     Tr {
