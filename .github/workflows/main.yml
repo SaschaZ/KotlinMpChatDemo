@@ -174,7 +174,7 @@ jobs:
           key: mac-${{ steps.vars.outputs.tag }}
 
       - name: Download win artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: windows${{  steps.vars.outputs.tag }}
           path: ./MpChatDemoWin/MpChatDemo/${{  steps.vars.outputs.tag }}
